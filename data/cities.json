@@ -1,0 +1,178 @@
+[
+    {
+        "id": "hamburg",
+        "name": "Hamburg",
+        "x": 0.65,
+        "y": 0.35,
+        "population": 5000,
+        "wealth": 100,
+        "hasPort": true,
+        "description": "Mächtige Hansestadt an der Elbe",
+        "initialGoods": {
+            "wheat": 200,
+            "fish": 150,
+            "wood": 100,
+            "iron": 50,
+            "cloth": 80,
+            "wine": 30,
+            "salt": 60,
+            "pottery": 40
+        },
+        "produces": ["fish", "salt"],
+        "consumes": ["wheat", "cloth", "wine"]
+    },
+    {
+        "id": "luebeck",
+        "name": "Lübeck",
+        "x": 0.62,
+        "y": 0.38,
+        "population": 4000,
+        "wealth": 90,
+        "hasPort": true,
+        "description": "Königin der Hanse",
+        "initialGoods": {
+            "wheat": 150,
+            "fish": 100,
+            "wood": 120,
+            "iron": 40,
+            "cloth": 60,
+            "wine": 20,
+            "salt": 40,
+            "pottery": 60
+        },
+        "produces": ["wood", "pottery"],
+        "consumes": ["fish", "iron", "wine"]
+    },
+    {
+        "id": "bremen",
+        "name": "Bremen",
+        "x": 0.58,
+        "y": 0.40,
+        "population": 3500,
+        "wealth": 85,
+        "hasPort": true,
+        "description": "Erzbischöfliche Handelsstadt",
+        "initialGoods": {
+            "wheat": 180,
+            "fish": 120,
+            "wood": 80,
+            "iron": 30,
+            "cloth": 50,
+            "wine": 15,
+            "salt": 80,
+            "pottery": 30
+        },
+        "produces": ["wheat", "salt"],
+        "consumes": ["wood", "iron", "cloth"]
+    },
+    {
+        "id": "rostock",
+        "name": "Rostock",
+        "x": 0.67,
+        "y": 0.36,
+        "population": 3000,
+        "wealth": 75,
+        "hasPort": true,
+        "description": "Ostseehafen mit aufstrebendem Handel",
+        "initialGoods": {
+            "wheat": 120,
+            "fish": 140,
+            "wood": 90,
+            "iron": 20,
+            "cloth": 40,
+            "wine": 10,
+            "salt": 30,
+            "pottery": 50
+        },
+        "produces": ["fish", "wood"],
+        "consumes": ["wheat", "iron", "wine"]
+    },
+    {
+        "id": "stettin",
+        "name": "Stettin",
+        "x": 0.72,
+        "y": 0.37,
+        "population": 2800,
+        "wealth": 70,
+        "hasPort": true,
+        "description": "Pommersche Handelsstadt an der Oder",
+        "initialGoods": {
+            "wheat": 160,
+            "fish": 80,
+            "wood": 110,
+            "iron": 25,
+            "cloth": 35,
+            "wine": 8,
+            "salt": 25,
+            "pottery": 35
+        },
+        "produces": ["wheat", "wood"],
+        "consumes": ["fish", "salt", "cloth"]
+    },
+    {
+        "id": "koeln",
+        "name": "Köln",
+        "x": 0.52,
+        "y": 0.44,
+        "population": 4500,
+        "wealth": 95,
+        "hasPort": false,
+        "description": "Reiche Handelsmetropole am Rhein",
+        "initialGoods": {
+            "wheat": 250,
+            "fish": 60,
+            "wood": 150,
+            "iron": 80,
+            "cloth": 120,
+            "wine": 60,
+            "salt": 40,
+            "pottery": 70
+        },
+        "produces": ["iron", "cloth", "wine"],
+        "consumes": ["wheat", "fish", "wood", "salt"]
+    },
+    {
+        "id": "nuernberg",
+        "name": "Nürnberg",
+        "x": 0.56,
+        "y": 0.50,
+        "population": 3800,
+        "wealth": 90,
+        "hasPort": false,
+        "description": "Fränkisches Handelszentrum",
+        "initialGoods": {
+            "wheat": 180,
+            "fish": 40,
+            "wood": 130,
+            "iron": 60,
+            "cloth": 90,
+            "wine": 20,
+            "salt": 35,
+            "pottery": 100
+        },
+        "produces": ["pottery", "cloth"],
+        "consumes": ["wheat", "iron", "wine"]
+    },
+    {
+        "id": "augsburg",
+        "name": "Augsburg",
+        "x": 0.54,
+        "y": 0.56,
+        "population": 3200,
+        "wealth": 85,
+        "hasPort": false,
+        "description": "Schwäbisches Handels- und Finanzzentrum",
+        "initialGoods": {
+            "wheat": 160,
+            "fish": 30,
+            "wood": 100,
+            "iron": 40,
+            "cloth": 70,
+            "wine": 30,
+            "salt": 20,
+            "pottery": 60
+        },
+        "produces": ["wheat", "wine"],
+        "consumes": ["fish", "iron", "cloth", "salt"]
+    }
+]

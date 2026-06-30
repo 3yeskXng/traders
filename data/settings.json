@@ -1,0 +1,9 @@
+{
+    "language": "de",
+    "masterVolume": 80,
+    "musicVolume": 70,
+    "sfxVolume": 80,
+    "fullscreen": false,
+    "showFPS": false,
+    "scrollSpeed": 1.0
+}

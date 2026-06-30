@@ -1,0 +1,90 @@
+[
+    {
+        "id": "wheat",
+        "name": "Weizen",
+        "basePrice": 12,
+        "baseProduction": 100,
+        "unit": "Sack",
+        "icon": "wheat",
+        "category": "food",
+        "weight": 1,
+        "perishable": false
+    },
+    {
+        "id": "fish",
+        "name": "Fisch",
+        "basePrice": 8,
+        "baseProduction": 80,
+        "unit": "Stück",
+        "icon": "fish",
+        "category": "food",
+        "weight": 1,
+        "perishable": true
+    },
+    {
+        "id": "wood",
+        "name": "Holz",
+        "basePrice": 15,
+        "baseProduction": 60,
+        "unit": "Balken",
+        "icon": "wood",
+        "category": "raw",
+        "weight": 2,
+        "perishable": false
+    },
+    {
+        "id": "iron",
+        "name": "Eisen",
+        "basePrice": 25,
+        "baseProduction": 40,
+        "unit": "Barren",
+        "icon": "iron",
+        "category": "raw",
+        "weight": 3,
+        "perishable": false
+    },
+    {
+        "id": "cloth",
+        "name": "Tuch",
+        "basePrice": 35,
+        "baseProduction": 30,
+        "unit": "Ballon",
+        "icon": "cloth",
+        "category": "crafted",
+        "weight": 1,
+        "perishable": false
+    },
+    {
+        "id": "wine",
+        "name": "Wein",
+        "basePrice": 40,
+        "baseProduction": 25,
+        "unit": "Fass",
+        "icon": "wine",
+        "category": "luxury",
+        "weight": 2,
+        "perishable": true
+    },
+    {
+        "id": "salt",
+        "name": "Salz",
+        "basePrice": 18,
+        "baseProduction": 50,
+        "unit": "Sack",
+        "icon": "salt",
+        "category": "food",
+        "weight": 1,
+        "perishable": false
+    },
+    {
+        "id": "pottery",
+        "name": "Töpferwaren",
+        "basePrice": 22,
+        "baseProduction": 35,
+        "unit": "Krug",
+        "icon": "pottery",
+        "category": "crafted",
+        "weight": 2,
+        "perishable": false
+    }
+]
