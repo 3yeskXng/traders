@@ -1,33 +1,76 @@
 local Components = {}
 
+Components.themes = {
+  retro = {
+    panelBg = {0.08, 0.07, 0.04, 0.95},
+    panelBorder = {0.65, 0.55, 0.35, 0.95},
+    panelTitle = {0.96, 0.88, 0.65, 1},
+    buttonBg = {0.24, 0.18, 0.12, 0.95},
+    buttonHover = {0.44, 0.34, 0.22, 0.95},
+    buttonBorder = {0.82, 0.72, 0.45, 1},
+    text = {0.95, 0.92, 0.82, 1},
+    textSecondary = {0.7, 0.62, 0.45, 1},
+    accent = {0.78, 0.62, 0.28, 1},
+    background = {0.06, 0.05, 0.03, 1},
+  },
+  clean = {
+    panelBg = {0.08, 0.1, 0.14, 0.95},
+    panelBorder = {0.5, 0.6, 0.72, 0.95},
+    panelTitle = {0.85, 0.92, 0.98, 1},
+    buttonBg = {0.18, 0.23, 0.3, 0.95},
+    buttonHover = {0.28, 0.4, 0.55, 0.95},
+    buttonBorder = {0.6, 0.75, 0.92, 1},
+    text = {0.94, 0.95, 0.98, 1},
+    textSecondary = {0.7, 0.78, 0.88, 1},
+    accent = {0.55, 0.75, 0.9, 1},
+    background = {0.03, 0.06, 0.1, 1},
+  },
+}
+
+Components.currentTheme = Components.themes.retro
+
+function Components.setTheme(name)
+  if Components.themes[name] then
+    Components.currentTheme = Components.themes[name]
+    return true
+  end
+  return false
+end
+
+function Components.getTheme()
+  return Components.currentTheme
+end
+
 function Components.drawPanel(x, y, w, h, title)
-  love.graphics.setColor(0.1, 0.1, 0.15, 0.95)
-  love.graphics.rectangle("fill", x, y, w, h)
-  love.graphics.setColor(0.4, 0.3, 0.2)
-  love.graphics.rectangle("line", x, y, w, h)
+  local theme = Components.currentTheme
+  love.graphics.setColor(theme.panelBg)
+  love.graphics.rectangle("fill", x, y, w, h, 12, 12)
+  love.graphics.setColor(theme.panelBorder)
+  love.graphics.setLineWidth(2)
+  love.graphics.rectangle("line", x, y, w, h, 12, 12)
+  love.graphics.setLineWidth(1)
   if title then
-    love.graphics.setColor(0.8, 0.7, 0.4)
-    love.graphics.printf(title, x + 5, y + 3, w - 10, "left")
-    love.graphics.setColor(0.3, 0.25, 0.15)
-    love.graphics.line(x + 2, y + 22, x + w - 2, y + 22)
+    love.graphics.setColor(theme.panelTitle)
+    love.graphics.printf(title, x + 14, y + 10, w - 28, "left")
+    love.graphics.setColor(theme.panelBorder)
+    love.graphics.line(x + 12, y + 32, x + w - 12, y + 32)
   end
 end
 
 function Components.drawButton(text, x, y, w, h, hover)
-  if hover then
-    love.graphics.setColor(0.4, 0.35, 0.25)
-  else
-    love.graphics.setColor(0.25, 0.2, 0.15)
-  end
-  love.graphics.rectangle("fill", x, y, w, h)
-  love.graphics.setColor(0.6, 0.5, 0.3)
-  love.graphics.rectangle("line", x, y, w, h)
-  love.graphics.setColor(1, 1, 1)
-  love.graphics.printf(text, x, y + h / 2 - 8, w, "center")
+  local theme = Components.currentTheme
+  love.graphics.setColor(hover and theme.buttonHover or theme.buttonBg)
+  love.graphics.rectangle("fill", x, y, w, h, 10, 10)
+  love.graphics.setColor(theme.buttonBorder)
+  love.graphics.setLineWidth(2)
+  love.graphics.rectangle("line", x, y, w, h, 10, 10)
+  love.graphics.setLineWidth(1)
+  love.graphics.setColor(theme.text)
+  love.graphics.printf(text, x, y + h / 2 - 10, w, "center")
 end
 
 function Components.drawLabel(text, x, y, color)
-  love.graphics.setColor(color or { 1, 1, 1 })
+  love.graphics.setColor(color or Components.currentTheme.text)
   love.graphics.print(text, x, y)
 end
 

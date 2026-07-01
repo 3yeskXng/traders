@@ -13,8 +13,15 @@
   "settings.fullscreen": "Vollbild",
   "settings.language": "Sprache",
   "menu.language": "Sprache",
+  "menu.changelog_title": "Änderungen",
+  "menu.changelog.line1": "Verbessertes Menü-Layout und Stilwahl.",
+  "menu.changelog.line2": "Chinesisch unterstützt, Sprache sofort schaltbar.",
+  "menu.changelog.line3": "Poliertere Buttons, Versionsanzeige und Kartenästhetik.",
+  "menu.map_label": "Hanseatische Seekarte",
+  "settings.ui_style": "UI-Stil",
   "language.de": "Deutsch",
   "language.en": "Englisch",
+  "language.zh": "Chinesisch",
   "common.yes": "Ja",
   "common.no": "Nein",
   "market.stock": "Lager: %s",
@@ -67,5 +74,6 @@
   "tooltip.wealth": "Wohlstand: %s",
   "tooltip.produces": "Produziert: %s",
   "tooltip.consumes": "Benötigt: %s",
+  "app.version": "Version %s",
   "button.close": "X"
 }

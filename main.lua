@@ -37,9 +37,13 @@ function love.load()
   love.graphics.setDefaultFilter("nearest", "nearest")
   Config:load("data/settings.json")
   Config.language = Config.language or "de"
+  Config.uiStyle = Config.uiStyle or "retro"
   Translator:loadLanguage("en", "data/lang/en.json")
   Translator:loadLanguage("de", "data/lang/de.json")
+  Translator:loadLanguage("zh", "data/lang/zh.json")
   Translator:setLanguage(Config.language)
+  local Components = require("ui.components")
+  Components.setTheme(Config.uiStyle)
   pluginManager = PluginManager.new()
   ModLoader:loadAll(pluginManager)
   saveManager = SaveManager.new()

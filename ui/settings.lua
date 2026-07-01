@@ -7,7 +7,8 @@ local Settings = {}
 
 function Settings.enter()
   Settings.items = {
-    { labelKey = "settings.language", key = "language", type = "choice", options = { "de", "en" }, value = Config.language or "de" },
+    { labelKey = "settings.language", key = "language", type = "choice", options = { "de", "en", "zh" }, value = Config.language or "de" },
+    { labelKey = "settings.ui_style", key = "uiStyle", type = "choice", options = { "retro", "clean" }, value = Config.uiStyle or "retro" },
     { labelKey = "settings.master_volume", key = "masterVolume", type = "slider", min = 0, max = 100, value = Config.masterVolume or 80 },
     { labelKey = "settings.music_volume", key = "musicVolume", type = "slider", min = 0, max = 100, value = Config.musicVolume or 70 },
     { labelKey = "settings.sfx_volume", key = "sfxVolume", type = "slider", min = 0, max = 100, value = Config.sfxVolume or 80 },
@@ -66,7 +67,11 @@ function Settings.keypressed(key)
       if index < 1 then index = #item.options end
       if index > #item.options then index = 1 end
       item.value = item.options[index]
-      EventBus:emit("language:change", item.value)
+      if item.key == "language" then
+        EventBus:emit("language:change", item.value)
+      elseif item.key == "uiStyle" then
+        Components.setTheme(item.value)
+      end
     end
   elseif key == "return" then EventBus:emit("state:change", "mainmenu") end
 end
@@ -87,7 +92,11 @@ function Settings.mousepressed(x, y, button)
         end
         index = index % #item.options + 1
         item.value = item.options[index]
-        EventBus:emit("language:change", item.value)
+        if item.key == "language" then
+          EventBus:emit("language:change", item.value)
+        elseif item.key == "uiStyle" then
+          Components.setTheme(item.value)
+        end
       end
     end
   end

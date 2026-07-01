@@ -13,8 +13,15 @@
   "settings.fullscreen": "Fullscreen",
   "settings.language": "Language",
   "menu.language": "Language",
+  "menu.changelog_title": "Changelog",
+  "menu.changelog.line1": "Improved menu layout and style picker.",
+  "menu.changelog.line2": "Added Chinese support and live language switching.",
+  "menu.changelog.line3": "More polished buttons, version display and map aesthetic.",
+  "menu.map_label": "Hanseatic Sea Route",
+  "settings.ui_style": "UI Style",
   "language.de": "German",
   "language.en": "English",
+  "language.zh": "Chinese",
   "common.yes": "Yes",
   "common.no": "No",
   "market.stock": "Stock: %s",
@@ -67,5 +74,6 @@
   "tooltip.wealth": "Wealth: %s",
   "tooltip.produces": "Produces: %s",
   "tooltip.consumes": "Consumes: %s",
+  "app.version": "Version %s",
   "button.close": "X"
 }
