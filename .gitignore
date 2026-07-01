@@ -1,1 +1,11 @@
-# Put here in big files, like .exe, .png,..., that you dont want upload to git(hub)
+*.exe
+*.png
+*.jpg
+*.wav
+*.ogg
+*.mp3
+*.ttf
+save_*.json
+.DS_Store
+Thumbs.db
+*.love

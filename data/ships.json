@@ -1,0 +1,5 @@
+[
+  {"id":"cog","name":"Kogge","cargo":100,"speed":3,"crew":20,"price":2000,"description":"Standard Handelsschiff"},
+  {"id":"hulk","name":"Hulk","cargo":200,"speed":2,"crew":30,"price":4000,"description":"Grosses Transportschiff"},
+  {"id":"schnigge","name":"Schnigge","cargo":50,"speed":5,"crew":10,"price":1000,"description":"Schnelles Handelsschiff"}
+]
