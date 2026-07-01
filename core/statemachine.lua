@@ -47,4 +47,9 @@ function StateMachine:mousemoved(x, y, dx, dy)
   if state and state.mousemoved then return state.mousemoved(x, y, dx, dy) end
 end
 
+function StateMachine:mousereleased(x, y, button)
+  local state = self.states[self.current]
+  if state and state.mousereleased then return state.mousereleased(x, y, button) end
+end
+
 return StateMachine

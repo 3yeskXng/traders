@@ -8,6 +8,7 @@ local World = require("simulation.world")
 local Player = require("simulation.player")
 local MainMenu = require("ui.mainmenu")
 local Settings = require("ui.settings")
+local NewGame = require("ui.newgame")
 local InGame = require("ui.ingame")
 local SaveManager = require("savegame.savemanager")
 
@@ -36,6 +37,7 @@ function love.load()
   stateMachine = StateMachine.new()
   stateMachine:add("mainmenu", MainMenu)
   stateMachine:add("settings", Settings)
+  stateMachine:add("newgame", NewGame)
   stateMachine:add("game", InGame)
   EventBus:on("state:change", function(data) stateMachine:change(data) end)
   EventBus:on("game:new", function()
@@ -46,13 +48,23 @@ function love.load()
     if goods then world:init({ goods = goods, cities = cities, ships = ships }) end
     player = Player.new("player", "Spieler")
     world:addPlayer(player)
-    local citiesList = world.cities:getAll()
-    if #citiesList > 0 then player.currentCityId = citiesList[1].id end
+    NewGame.world = world
+    NewGame.player = player
+    EventBus.world = world
+    stateMachine:change("newgame")
+    log:info("New game initialized")
+  end)
+
+  EventBus:on("game:start", function(data)
+    if not world or not player or not data or not data.city then return end
+    player.currentCityId = data.city.id
+    local startShip = world.ships:createShip("cog", player.id)
+    if startShip then startShip.currentCityId = player.currentCityId end
     InGame.world = world
     EventBus.world = world
     stateMachine:change("game")
     ModLoader:loadAll()
-    log:info("New game started")
+    log:info("Game started in %s", data.city.name)
   end)
   EventBus:on("game:load", function()
     world = World.new()
@@ -125,6 +137,10 @@ end
 
 function love.mousemoved(x, y, dx, dy)
   stateMachine:mousemoved(x, y, dx, dy)
+end
+
+function love.mousereleased(x, y, button)
+  stateMachine:mousereleased(x, y, button)
 end
 
 function love.resize(w, h) end

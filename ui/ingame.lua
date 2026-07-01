@@ -15,6 +15,15 @@ function InGame.enter()
   InGame.marketUI = MarketUI.new()
   InGame.notifications = {}
   InGame.currentCity = nil
+  if InGame.world and InGame.world.players[1] then
+    local player = InGame.world.players[1]
+    local city = player.currentCityId and InGame.world.cities:getById(player.currentCityId)
+    if city then
+      local w, h = love.graphics.getDimensions()
+      InGame.mapRenderer.camera:setTarget(city.x * w - w / 2, city.y * h - h / 2)
+      InGame.mapRenderer._centerOnArrival = false
+    end
+  end
   if love.filesystem then
     local file = love.filesystem.newFile("data/map.json", "r")
     if file then
@@ -80,7 +89,7 @@ function InGame:drawTopBar(w, h, world)
   love.graphics.print(world.time:getDateString(), 10, 7)
   if InGame.currentCity then
     love.graphics.setColor(0.6, 0.8, 1)
-    love.graphics.print("Standort: " .. InGame.currentCity.name, 200, 7)
+    love.graphics.print("Standort: " .. InGame.currentCity.name, 220, 7)
   end
   love.graphics.setColor(0.8, 0.7, 0.2)
   if world.players[1] then

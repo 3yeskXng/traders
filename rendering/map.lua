@@ -62,6 +62,9 @@ function MapRenderer:draw(w, h, world)
   self:drawCityLabel(w, h, world)
   self.camera:endApply()
   self:drawOverlay(w, h)
+  if self.hoveredCity then
+    self:drawCityTooltip(w, h, self.hoveredCity)
+  end
 end
 
 function MapRenderer:drawBackground(w, h)
@@ -237,14 +240,20 @@ function MapRenderer:drawCities(w, h, world)
     local isHover = city == self.hoveredCity
     local player = world.players[1]
     local isPlayer = player and player.currentCityId == city.id
+    local isSelected = self.selectedCity and city.id == self.selectedCity.id
 
-    self:drawCityIcon(sx, sy, city, isHover, isPlayer)
+    self:drawCityIcon(sx, sy, city, isHover, isPlayer, isSelected)
   end
 end
 
-function MapRenderer:drawCityIcon(sx, sy, city, isHover, isPlayer)
-  local scale = isHover and 1.3 or 1
+function MapRenderer:drawCityIcon(sx, sy, city, isHover, isPlayer, isSelected)
+  local scale = (isHover or isSelected) and 1.3 or 1
   local size = 10 * scale
+
+  if isSelected then
+    love.graphics.setColor(1, 0.8, 0.3, 0.25)
+    love.graphics.circle("fill", sx, sy, size * 2.5)
+  end
 
   if isPlayer then
     love.graphics.setColor(1, 0.9, 0.3, 0.2)
@@ -411,10 +420,16 @@ function MapRenderer:drawCityTooltip(w, h, city)
   love.graphics.setNewFont(12)
 end
 
+function MapRenderer:screenToWorld(sx, sy)
+  local scale = self.camera.scale or 1
+  return sx / scale + self.camera.x, sy / scale + self.camera.y
+end
+
 function MapRenderer:getCityAt(sx, sy, w, h, world)
+  local wx, wy = self:screenToWorld(sx, sy)
   for _, city in ipairs(world.cities:getAll()) do
     local cx, cy = city.x * w, city.y * h
-    local dx, dy = sx - cx, sy - cy
+    local dx, dy = wx - cx, wy - cy
     if dx * dx + dy * dy <= 225 then
       return city
     end
