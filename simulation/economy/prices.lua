@@ -2,10 +2,10 @@ local Utils = require("core.utils")
 
 local Prices = {}
 
-local MIN_PRICE_FACTOR = 0.3
-local MAX_PRICE_FACTOR = 3.0
-local STOCK_INFLUENCE = 0.7
-local BASE_CAPACITY = 500
+local MIN_PRICE_FACTOR = 0.15
+local MAX_PRICE_FACTOR = 5.0
+local STOCK_INFLUENCE = 1.0
+local BASE_CAPACITY = 300
 
 function Prices.calculate(basePrice, stock, population, randomFactor)
   local capacity = math.max(BASE_CAPACITY, population * 0.2)

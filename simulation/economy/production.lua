@@ -3,7 +3,7 @@ local log = Logger.new("production")
 
 local Production = {}
 
-local EFFICIENCY_FACTOR = 0.1
+local EFFICIENCY_FACTOR = 0.2
 
 function Production.run(city, goods)
   for _, goodId in ipairs(city.produces) do

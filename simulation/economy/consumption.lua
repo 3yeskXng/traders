@@ -3,7 +3,7 @@ local log = Logger.new("consumption")
 
 local Consumption = {}
 
-local CONSUMPTION_RATE = 0.05
+local CONSUMPTION_RATE = 0.12
 
 function Consumption.run(city, goods)
   for _, goodId in ipairs(city.consumes) do

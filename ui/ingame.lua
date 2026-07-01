@@ -3,6 +3,8 @@ local Utils = require("core.utils")
 local Components = require("ui.components")
 local MapRenderer = require("rendering.map")
 local MarketUI = require("ui.market")
+local MapConfig = require("simulation.map.config")
+local json = require("core.json")
 local Logger = require("core.logger")
 local log = Logger.new("ingame")
 
@@ -13,6 +15,22 @@ function InGame.enter()
   InGame.marketUI = MarketUI.new()
   InGame.notifications = {}
   InGame.currentCity = nil
+  if love.filesystem then
+    local file = love.filesystem.newFile("data/map.json", "r")
+    if file then
+      local data = file:read()
+      file:close()
+      local ok, parsed = pcall(json.decode, data)
+      if ok and parsed then
+        InGame.mapRenderer.mapConfig = MapConfig.new(parsed)
+        log:info("Map loaded: %s", parsed.name or "unknown")
+      else
+        log:warn("Could not parse map.json")
+      end
+    else
+      log:warn("Could not open data/map.json")
+    end
+  end
 end
 
 function InGame.leave()
