@@ -1,57 +1,57 @@
 # Traders
 
-Eine hochgradig modulare Handelssimulation, inspiriert von Patrizier II.
+A highly modular trading simulation game built with LÖVE (Love2D).
 
-## Architektur
+## Architecture
 
-Simulation und Darstellung sind vollständig getrennt. Alle Spielregeln funktionieren auch ohne Fenster oder Grafik.
+Simulation and rendering are strictly separated. All game rules work without a window or graphics.
 
 ```
-core/          Engine, EventBus, Config, Logger, Utils, Json
-simulation/    Weltkern (keine LÖVE/Love2D-Abhängigkeit)
-rendering/     Grafische Darstellung
-ui/            Benutzeroberfläche
-savegame/      Speichern/Laden
-multiplayer/   Platzhalter (später ersetzbar)
-mods/          Mod-System
-data/          JSON-Daten (Waren, Städte, Schiffe, Steuern, ...)
-assets/        Ressourcen (Bilder, Sounds)
+core/          Engine, EventBus, Config, Logger, Utils, JSON
+simulation/    Game world (no LÖVE dependency)
+rendering/     Graphical output
+ui/            User interface
+savegame/      Save/Load system
+multiplayer/   Placeholder (replaceable later)
+mods/          Mod system
+data/          JSON data (goods, cities, ships, taxes, ...)
+assets/        Resources (images, sounds)
 ```
 
-## Grundsätze
+## Principles
 
-- Lieber 50 kleine Dateien als eine riesige Datei
-- Jedes System bekommt sein eigenes Modul
-- Neue Waren/Städte/Schiffe/Gebäude benötigen keine Code-Änderung
-- EventBus für lose Kopplung
-- Keine globalen Variablen
-- Konfiguration aus JSON-Dateien
+- Prefer 50 small files over one large file
+- Each system gets its own module
+- New goods/cities/ships/buildings require no code changes
+- EventBus for loose coupling
+- No global variables
+- Configuration from JSON files
 
-## Starten
+## Running
 
-LÖVE 11.5 erforderlich.
+Requires LÖVE 11.5.
 
 ```bash
 love .
 ```
 
-## Steuerung
+## Controls
 
-- Pfeiltasten links/rechts: Geschwindigkeit ändern
-- Leertaste: Pause
-- Stadt anklicken: Markt öffnen
-- Escape: Markt schließen / zurück zum Menü
+- Left/Right arrow: change speed
+- Space: pause
+- Click city: open market
+- Escape: close market / back to menu
 
-## Meilensteine
+## Milestones
 
-- ✅ Phase 1: Grundgerüst (Engine, Events, Module, Logging)
-- ✅ Phase 2: Welt (Städte, Waren, Karte)
-- ✅ Phase 3: Handel (Kaufen, Verkaufen, Preise, Lager)
-- ✅ Phase 4: Schiffe (Daten, Bewegung, Beladung)
-- ✅ Phase 5: Wirtschaft (Produktion, Verbrauch, Nachfrage, Angebot)
-- ✅ Phase 6: Steuern (Stadtsteuern, Hafengebühren, Zoll)
-- ⬜ Phase 7: NPC-Händler (KI)
+- ✅ Phase 1: Framework (Engine, Events, Modules, Logging)
+- ✅ Phase 2: World (Cities, Goods, Map)
+- ✅ Phase 3: Trade (Buy, Sell, Prices, Storage)
+- ✅ Phase 4: Ships (Data, Movement, Cargo)
+- ✅ Phase 5: Economy (Production, Consumption, Demand, Supply)
+- ✅ Phase 6: Taxes (City Tax, Port Fees, Customs)
+- ⬜ Phase 7: NPC Traders (AI)
 
-## Lizenz
+## License
 
 GNU General Public License v3

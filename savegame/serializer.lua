@@ -8,8 +8,9 @@ function Serializer.encode(data)
   return json.encode(data)
 end
 
-function Serializer.decode(str)
-  return json.decode(str)
+function Serializer.decode(data)
+  if type(data) ~= "string" and data and data.getString then data = data:getString() end
+  return json.decode(data)
 end
 
 function Serializer.saveToFile(filename, data)
@@ -20,11 +21,14 @@ function Serializer.saveToFile(filename, data)
 end
 
 function Serializer.loadFromFile(filename)
-  local data, err = love.filesystem.read(filename)
+  local file = love.filesystem.newFile(filename, "r")
+  if not file then return nil end
+  local data = file:read()
+  file:close()
   if not data then return nil end
   local ok, result = pcall(Serializer.decode, data)
   if ok then return result end
-  log:warn("Failed to decode %s", filename)
+  log:warn("Failed to decode %s: %s", filename, tostring(result))
   return nil
 end
 

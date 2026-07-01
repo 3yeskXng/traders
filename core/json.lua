@@ -1,6 +1,13 @@
 local json = {}
 
+local function getString(data)
+  if type(data) == "string" then return data end
+  if type(data) == "userdata" and data.getString then return data:getString() end
+  return tostring(data)
+end
+
 function json.decode(str)
+  str = getString(str)
   local idx, len = 1, #str
   local function skip()
     while idx <= len do
@@ -55,9 +62,19 @@ function json.decode(str)
     elseif c == "f" and str:sub(idx, idx + 4) == "false" then idx = idx + 5 return false
     elseif c == "n" and str:sub(idx, idx + 3) == "null" then idx = idx + 4 return nil
     else
-      local ns = str:match("^-?[0-9]+%.?[0-9]*([eE][+-]?[0-9]+)?", idx)
-      if ns then idx = idx + #ns; local n = tonumber(ns); if n then return n end end
-      error("Unexpected char: " .. c)
+      local ns = str:match("-?[0-9]+%.?[0-9]*", idx)
+      if ns then
+        local matchLen = #ns
+        if str:sub(idx, idx + matchLen - 1) == ns then
+          idx = idx + matchLen
+          local exp = str:match("[eE][+-]?[0-9]+", idx)
+          if exp and str:sub(idx, idx + #exp - 1) == exp then
+            ns = ns .. exp; idx = idx + #exp
+          end
+          local n = tonumber(ns); if n then return n end
+        end
+      end
+      error("Unexpected char: " .. c .. " at pos " .. idx .. " (first 20: " .. str:sub(1, math.min(20, #str)) .. ")")
     end
   end
   return parse()

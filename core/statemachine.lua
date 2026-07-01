@@ -13,45 +13,38 @@ function StateMachine:add(name, handlers)
 end
 
 function StateMachine:change(name, ...)
-  if self.current and self.states[self.current] and self.states[self.current].leave then
-    self.states[self.current]:leave()
-  end
+  local prev = self.current and self.states[self.current]
+  if prev and prev.leave then prev.leave() end
   self.previous = self.current
   self.current = name
-  if self.states[name] and self.states[name].enter then
-    self.states[name]:enter(...)
-  end
+  local next = self.states[name]
+  if next and next.enter then next.enter(...) end
   log:info("State changed to: %s", name)
 end
 
 function StateMachine:update(dt)
-  if self.current and self.states[self.current] and self.states[self.current].update then
-    self.states[self.current]:update(dt)
-  end
+  local state = self.states[self.current]
+  if state and state.update then state.update(dt) end
 end
 
 function StateMachine:draw()
-  if self.current and self.states[self.current] and self.states[self.current].draw then
-    self.states[self.current]:draw()
-  end
+  local state = self.states[self.current]
+  if state and state.draw then state.draw() end
 end
 
 function StateMachine:keypressed(key, scancode, isrepeat)
-  if self.current and self.states[self.current] and self.states[self.current].keypressed then
-    return self.states[self.current]:keypressed(key, scancode, isrepeat)
-  end
+  local state = self.states[self.current]
+  if state and state.keypressed then return state.keypressed(key, scancode, isrepeat) end
 end
 
 function StateMachine:mousepressed(x, y, button)
-  if self.current and self.states[self.current] and self.states[self.current].mousepressed then
-    return self.states[self.current]:mousepressed(x, y, button)
-  end
+  local state = self.states[self.current]
+  if state and state.mousepressed then return state.mousepressed(x, y, button) end
 end
 
 function StateMachine:mousemoved(x, y, dx, dy)
-  if self.current and self.states[self.current] and self.states[self.current].mousemoved then
-    return self.states[self.current]:mousemoved(x, y, dx, dy)
-  end
+  local state = self.states[self.current]
+  if state and state.mousemoved then return state.mousemoved(x, y, dx, dy) end
 end
 
 return StateMachine

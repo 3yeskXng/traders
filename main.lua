@@ -1,9 +1,9 @@
 local Logger = require("core.logger")
+local json = require("core.json")
 local EventBus = require("core.eventbus")
 local Config = require("core.config")
 local StateMachine = require("core.statemachine")
 local ModLoader = require("core.modloader")
-local json = require("core.json")
 local World = require("simulation.world")
 local Player = require("simulation.player")
 local Renderer = require("rendering.renderer")
@@ -19,6 +19,17 @@ local player
 local renderer
 local saveManager
 
+local function readJSON(path)
+  local file = love.filesystem.newFile(path, "r")
+  if not file then log:warn("Could not open %s", path) return nil end
+  local data = file:read()
+  file:close()
+  local ok, result = pcall(json.decode, data)
+  if ok then return result end
+  log:warn("Failed to parse %s: %s", path, tostring(result))
+  return nil
+end
+
 function love.load()
   math.randomseed(os.time())
   love.graphics.setDefaultFilter("nearest", "nearest")
@@ -31,14 +42,14 @@ function love.load()
   EventBus:on("state:change", function(data) stateMachine:change(data) end)
   EventBus:on("game:new", function()
     world = World.new()
-    local goodsData, _ = love.filesystem.read("data/goods.json")
-    local citiesData, _ = love.filesystem.read("data/cities.json")
-    local shipsData, _ = love.filesystem.read("data/ships.json")
-    if goodsData then world:init({ goods = json.decode(goodsData), cities = citiesData and json.decode(citiesData), ships = shipsData and json.decode(shipsData) }) end
+    local goods = readJSON("data/goods.json")
+    local cities = readJSON("data/cities.json")
+    local ships = readJSON("data/ships.json")
+    if goods then world:init({ goods = goods, cities = cities, ships = ships }) end
     player = Player.new("player", "Spieler")
     world:addPlayer(player)
-    local cities = world.cities:getAll()
-    if #cities > 0 then player.currentCityId = cities[1].id end
+    local citiesList = world.cities:getAll()
+    if #citiesList > 0 then player.currentCityId = citiesList[1].id end
     renderer = Renderer.new(world)
     InGame.world = world
     EventBus.world = world
@@ -48,10 +59,10 @@ function love.load()
   end)
   EventBus:on("game:load", function()
     world = World.new()
-    local goodsData, _ = love.filesystem.read("data/goods.json")
-    local citiesData, _ = love.filesystem.read("data/cities.json")
-    local shipsData, _ = love.filesystem.read("data/ships.json")
-    if goodsData then world:init({ goods = json.decode(goodsData), cities = citiesData and json.decode(citiesData), ships = shipsData and json.decode(shipsData) }) end
+    local goods = readJSON("data/goods.json")
+    local cities = readJSON("data/cities.json")
+    local ships = readJSON("data/ships.json")
+    if goods then world:init({ goods = goods, cities = cities, ships = ships }) end
     local ok = saveManager:load(world, 1)
     if not ok then log:warn("No save found, starting new game") EventBus:emit("game:new") return end
     player = world.players[1] or Player.new("player", "Spieler")
