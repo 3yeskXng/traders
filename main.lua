@@ -2,6 +2,8 @@ local Logger = require("core.logger")
 local json = require("core.json")
 local EventBus = require("core.eventbus")
 local Config = require("core.config")
+local Translator = require("core.translator")
+local PluginManager = require("core.pluginmanager")
 local StateMachine = require("core.statemachine")
 local ModLoader = require("core.modloader")
 local World = require("simulation.world")
@@ -17,6 +19,7 @@ local stateMachine
 local world
 local player
 local saveManager
+local pluginManager
 
 local function readJSON(path)
   local file = love.filesystem.newFile(path, "r")
@@ -33,6 +36,12 @@ function love.load()
   math.randomseed(os.time())
   love.graphics.setDefaultFilter("nearest", "nearest")
   Config:load("data/settings.json")
+  Config.language = Config.language or "de"
+  Translator:loadLanguage("en", "data/lang/en.json")
+  Translator:loadLanguage("de", "data/lang/de.json")
+  Translator:setLanguage(Config.language)
+  pluginManager = PluginManager.new()
+  ModLoader:loadAll(pluginManager)
   saveManager = SaveManager.new()
   stateMachine = StateMachine.new()
   stateMachine:add("mainmenu", MainMenu)
@@ -40,6 +49,12 @@ function love.load()
   stateMachine:add("newgame", NewGame)
   stateMachine:add("game", InGame)
   EventBus:on("state:change", function(data) stateMachine:change(data) end)
+  EventBus:on("language:change", function(code)
+    if Translator:setLanguage(code) then
+      Config.language = code
+      Config:save("data/settings.json")
+    end
+  end)
   EventBus:on("game:new", function()
     world = World.new()
     local goods = readJSON("data/goods.json")
@@ -63,7 +78,6 @@ function love.load()
     InGame.world = world
     EventBus.world = world
     stateMachine:change("game")
-    ModLoader:loadAll()
     log:info("Game started in %s", data.city.name)
   end)
   EventBus:on("game:load", function()

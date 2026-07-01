@@ -1,6 +1,7 @@
 local EventBus = require("core.eventbus")
 local Components = require("ui.components")
 local MapRenderer = require("rendering.map")
+local Translator = require("core.translator")
 local Logger = require("core.logger")
 local log = Logger.new("newgame")
 
@@ -36,25 +37,25 @@ function NewGame.draw()
     NewGame.mapRenderer.selectedCity = NewGame.selectedCity
     NewGame.mapRenderer:draw(w, h, NewGame.world)
   end
-  Components.drawPanel(w * 0.1, h * 0.08, w * 0.8, h * 0.14, "Neues Spiel")
+  Components.drawPanel(w * 0.1, h * 0.08, w * 0.8, h * 0.14, Translator:t("newgame.title"))
   love.graphics.setColor(1, 1, 1)
-  love.graphics.printf("Wähle deine Startstadt und beginne deine Handelsreise.", w * 0.12, h * 0.12, w * 0.76, "left")
+  love.graphics.printf(Translator:t("newgame.description"), w * 0.12, h * 0.12, w * 0.76, "left")
 
   local infoY = h * 0.24
   if NewGame.selectedCity then
-    love.graphics.printf("Startstadt: " .. NewGame.selectedCity.name, w * 0.12, infoY, w * 0.76, "left")
-    love.graphics.printf("Bevölkerung: " .. NewGame.selectedCity.population, w * 0.12, infoY + 22, w * 0.76, "left")
-    love.graphics.printf("Wohlstand: " .. NewGame.selectedCity.wealth, w * 0.12, infoY + 44, w * 0.76, "left")
+    love.graphics.printf(Translator:t("newgame.start_city", NewGame.selectedCity.name), w * 0.12, infoY, w * 0.76, "left")
+    love.graphics.printf(Translator:t("city.population", NewGame.selectedCity.population), w * 0.12, infoY + 22, w * 0.76, "left")
+    love.graphics.printf(Translator:t("city.wealth", NewGame.selectedCity.wealth), w * 0.12, infoY + 44, w * 0.76, "left")
   else
-    love.graphics.printf("Klicke auf eine Stadt, um zu starten.", w * 0.12, infoY, w * 0.76, "left")
+    love.graphics.printf(Translator:t("newgame.select_city"), w * 0.12, infoY, w * 0.76, "left")
   end
 
   local buttonW, buttonH = 220, 44
   local bx, by = w * 0.7, h * 0.9 - buttonH
   local startHover = NewGame.buttonHover == "start"
   local backHover = NewGame.buttonHover == "back"
-  Components.drawButton("Spiel starten", bx, by, buttonW, buttonH, startHover)
-  Components.drawButton("Zurück", bx - buttonW - 20, by, buttonW, buttonH, backHover)
+  Components.drawButton(Translator:t("newgame.start"), bx, by, buttonW, buttonH, startHover)
+  Components.drawButton(Translator:t("newgame.back"), bx - buttonW - 20, by, buttonW, buttonH, backHover)
 end
 
 function NewGame.mousepressed(x, y, button)

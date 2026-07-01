@@ -1,5 +1,6 @@
 local EventBus = require("core.eventbus")
 local Components = require("ui.components")
+local Translator = require("core.translator")
 local Logger = require("core.logger")
 local log = Logger.new("marketui")
 
@@ -39,7 +40,7 @@ function MarketUI:draw(w, h)
   if not self.visible or not self.city then return end
   local px, py, pw = w * 0.2, h * 0.1, w * 0.6
   local ph = h * 0.8
-  Components.drawPanel(px, py, pw, ph, self.city.name .. " - Markt")
+  Components.drawPanel(px, py, pw, ph, Translator:t("market.title", self.city.name))
 
   local goods = EventBus.world and EventBus.world.goods and EventBus.world.goods:getAll() or {}
   local gy = py + 30
@@ -89,7 +90,7 @@ function MarketUI:draw(w, h)
       end
       love.graphics.rectangle("fill", bx, ry, 40, rowHeight)
       love.graphics.setColor(1, 1, 1)
-      love.graphics.printf("Kauf", bx, ry + rowHeight / 2 - 7, 40, "center")
+      love.graphics.printf(Translator:t("market.buy"), bx, ry + rowHeight / 2 - 7, 40, "center")
     end
 
     local sx = bx + 45
@@ -101,7 +102,7 @@ function MarketUI:draw(w, h)
       end
       love.graphics.rectangle("fill", sx, ry, 40, rowHeight)
       love.graphics.setColor(1, 1, 1)
-      love.graphics.printf("Verk", sx, ry + rowHeight / 2 - 7, 40, "center")
+      love.graphics.printf(Translator:t("market.sell"), sx, ry + rowHeight / 2 - 7, 40, "center")
     end
   end
 
@@ -114,7 +115,7 @@ function MarketUI:draw(w, h)
     love.graphics.print("Menge:", px + 15, amountY + 5)
     for i, amt in ipairs(AMOUNT_CHOICES) do
       local ax = px + 80 + (i - 1) * 50
-      local label = amt == 0 and "Max" or tostring(amt)
+      local label = amt == 0 and Translator:t("market.max") or tostring(amt)
       if self.selectedAmount == amt then
         love.graphics.setColor(0.4, 0.6, 0.4)
         love.graphics.rectangle("fill", ax, amountY + 2, 45, 20)
@@ -134,7 +135,7 @@ function MarketUI:draw(w, h)
   end
 
   love.graphics.setColor(0.8, 0.2, 0.2)
-  love.graphics.printf("X", px + pw - 20, py + 5, 15, "center")
+  love.graphics.printf(Translator:t("button.close"), px + pw - 20, py + 5, 15, "center")
 end
 
 function MarketUI:mousepressed(x, y, w, h)
@@ -176,7 +177,7 @@ function MarketUI:mousepressed(x, y, w, h)
       if Components.isInRect(x, y, bx, ry, 40, rowHeight) then
         local buyAmt = math.min(amount, stock, math.floor(self.player.gold / price))
         EventBus:emit("trade:buy", { city = self.city, goodId = good.id, amount = buyAmt })
-        self:showMessage("Gekauft: " .. buyAmt .. " " .. good.name)
+        self:showMessage(Translator:t("market.message.buy", buyAmt, good.name))
         return true
       end
     end
@@ -185,7 +186,7 @@ function MarketUI:mousepressed(x, y, w, h)
       if Components.isInRect(x, y, sx, ry, 40, rowHeight) then
         local sellAmt = math.min(amount, playerStock)
         EventBus:emit("trade:sell", { city = self.city, goodId = good.id, amount = sellAmt })
-        self:showMessage("Verkauft: " .. sellAmt .. " " .. good.name)
+        self:showMessage(Translator:t("market.message.sell", sellAmt, good.name))
         return true
       end
     end

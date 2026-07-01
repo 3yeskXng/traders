@@ -1,11 +1,17 @@
 local EventBus = require("core.eventbus")
 local Components = require("ui.components")
+local Translator = require("core.translator")
 
 local MainMenu = {}
 
 function MainMenu.enter()
   MainMenu.selected = 1
-  MainMenu.buttons = { { text = "Neues Spiel", event = "game:new" }, { text = "Spiel laden", event = "game:load" }, { text = "Einstellungen", event = "state:change", data = "settings" }, { text = "Beenden", event = "quit" } }
+  MainMenu.buttons = {
+    { text = Translator:t("menu.new_game"), event = "game:new" },
+    { text = Translator:t("menu.load_game"), event = "game:load" },
+    { text = Translator:t("menu.settings"), event = "state:change", data = "settings" },
+    { text = Translator:t("menu.quit"), event = "quit" },
+  }
 end
 
 function MainMenu.leave() end
@@ -19,10 +25,10 @@ function MainMenu.draw()
   love.graphics.setColor(0.7, 0.6, 0.3)
   local fontSize = math.min(48, w / 20)
   love.graphics.setFont(love.graphics.newFont(fontSize))
-  love.graphics.printf("Traders", 0, h * 0.2, w, "center")
+  love.graphics.printf(Translator:t("game.title"), 0, h * 0.2, w, "center")
   love.graphics.setFont(love.graphics.newFont(18))
   love.graphics.setColor(0.5, 0.5, 0.5)
-  love.graphics.printf("Eine Handelssimulation", 0, h * 0.2 + fontSize + 10, w, "center")
+  love.graphics.printf(Translator:t("game.subtitle"), 0, h * 0.2 + fontSize + 10, w, "center")
   local bw, bh = 250, 40
   local bx, by = (w - bw) / 2, h * 0.45
   for i, btn in ipairs(MainMenu.buttons) do

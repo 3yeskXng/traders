@@ -84,24 +84,26 @@ function InGame.draw()
   InGame:drawNotifications(w, h)
 end
 
+local Translator = require("core.translator")
+
 function InGame:drawTopBar(w, h, world)
   Components.drawPanel(0, 0, w, 30, nil)
   love.graphics.setColor(1, 1, 1)
   love.graphics.print(world.time:getDateString(), 10, 7)
   if InGame.currentCity then
     love.graphics.setColor(0.6, 0.8, 1)
-    love.graphics.print("Standort: " .. InGame.currentCity.name, 220, 7)
+    love.graphics.print(Translator:t("status.city", InGame.currentCity.name), 220, 7)
   end
   love.graphics.setColor(0.8, 0.7, 0.2)
   if world.players[1] then
-    love.graphics.printf("Gold: " .. Utils.formatNumber(world.players[1].gold), 0, 7, w - 10, "right")
+    love.graphics.printf(Translator:t("status.gold", Utils.formatNumber(world.players[1].gold)), 0, 7, w - 10, "right")
   end
 end
 
 function InGame:drawSidePanel(w, h, world)
   local panelWidth = math.min(260, w * 0.2)
   local panelHeight = h - 40 - 35
-  Components.drawPanel(10, 40, panelWidth, panelHeight, "Status")
+  Components.drawPanel(10, 40, panelWidth, panelHeight, Translator:t("status.title"))
 
   local x = 20
   local y = 70
@@ -111,16 +113,16 @@ function InGame:drawSidePanel(w, h, world)
   y = y + 22
 
   if InGame.currentCity then
-    love.graphics.print("Stadt: " .. InGame.currentCity.name, x, y)
+    love.graphics.print(Translator:t("status.city", InGame.currentCity.name), x, y)
     y = y + 20
-    love.graphics.print("Bevölkerung: " .. Utils.formatNumber(InGame.currentCity.population), x, y)
+    love.graphics.print(Translator:t("status.population", Utils.formatNumber(InGame.currentCity.population)), x, y)
     y = y + 20
-    love.graphics.print("Wohlstand: " .. Utils.formatNumber(InGame.currentCity.wealth), x, y)
+    love.graphics.print(Translator:t("status.wealth", Utils.formatNumber(InGame.currentCity.wealth)), x, y)
     y = y + 20
-    love.graphics.print("Hafen: " .. (InGame.currentCity.hasPort and "Ja" or "Nein"), x, y)
+    love.graphics.print(Translator:t("status.port", InGame.currentCity.hasPort and Translator:t("status.yes") or Translator:t("status.no")), x, y)
     y = y + 24
     love.graphics.setColor(0.8, 0.9, 1)
-    love.graphics.print("Produktion", x, y)
+    love.graphics.print(Translator:t("status.production"), x, y)
     y = y + 18
     love.graphics.setColor(1, 1, 1)
     for _, goodId in ipairs(InGame.currentCity.produces) do
@@ -129,7 +131,7 @@ function InGame:drawSidePanel(w, h, world)
     end
     y = y + 6
     love.graphics.setColor(0.9, 0.8, 0.7)
-    love.graphics.print("Nachfrage", x, y)
+    love.graphics.print(Translator:t("status.demand"), x, y)
     y = y + 18
     love.graphics.setColor(1, 1, 1)
     for _, goodId in ipairs(InGame.currentCity.consumes) do
@@ -161,12 +163,12 @@ function InGame:drawSidePanel(w, h, world)
 
   if world.travel.traveling and world.travel.to then
     love.graphics.setColor(0.8, 0.9, 1)
-    love.graphics.print("Unterwegs nach:", x, y)
+    love.graphics.print(Translator:t("status.travel_to"), x, y)
     y = y + 18
     love.graphics.setColor(1, 1, 1)
     love.graphics.print(world.travel.to.name, x + 6, y)
     y = y + 18
-    love.graphics.print("Fortschritt: " .. math.floor(world.travel.progress * 100) .. "%", x + 6, y)
+    love.graphics.print(Translator:t("status.progress", math.floor(world.travel.progress * 100)), x + 6, y)
   end
 end
 
@@ -174,15 +176,15 @@ function InGame:drawBottomBar(w, h, world)
   Components.drawPanel(0, h - 35, w, 35, nil)
   local speedLabel = world.time:getSpeedLabel()
   love.graphics.setColor(1, 1, 1)
-  love.graphics.print("Geschwindigkeit: " .. speedLabel, 10, h - 27)
-  love.graphics.print("[<] [>] Leertaste=Pause", 200, h - 27)
+  love.graphics.print(Translator:t("status.speed", speedLabel), 10, h - 27)
+  love.graphics.print(Translator:t("status.pause_hint"), 200, h - 27)
   if world.travel.traveling and InGame.currentCity then
     love.graphics.setColor(1, 0.8, 0.2)
     local progress = math.floor(world.travel.progress * 100)
     love.graphics.printf("Reise nach " .. world.travel.to.name .. " (" .. progress .. "%)", 0, h - 27, w - 10, "right")
   elseif InGame.currentCity then
     love.graphics.setColor(0.5, 0.8, 0.5)
-    love.graphics.printf("In " .. InGame.currentCity.name, 0, h - 27, w - 10, "right")
+    love.graphics.printf(Translator:t("status.in_city", InGame.currentCity.name), 0, h - 27, w - 10, "right")
   end
 end
 
