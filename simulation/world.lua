@@ -34,6 +34,7 @@ function World:init(data)
   if data.goods then self.goods:load(data.goods) end
   if data.cities then self.cities:load(data.cities) end
   if data.ships then self.ships:loadTypes(data.ships) end
+  self:updateEconomy()
   log:info("World initialized")
   return true
 end

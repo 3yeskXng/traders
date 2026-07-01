@@ -2,6 +2,12 @@ local City = {}
 City.__index = City
 
 function City.new(data)
+  local inventory = {}
+  if data.initialGoods then
+    for id, amount in pairs(data.initialGoods) do
+      inventory[id] = amount
+    end
+  end
   return setmetatable({
     id = data.id,
     name = data.name,
@@ -11,7 +17,7 @@ function City.new(data)
     wealth = data.wealth,
     hasPort = data.hasPort,
     description = data.description or "",
-    inventory = {},
+    inventory = inventory,
     prices = {},
     produces = data.produces or {},
     consumes = data.consumes or {},

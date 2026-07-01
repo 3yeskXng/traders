@@ -17,7 +17,9 @@ function Prices.calculate(basePrice, stock, population, randomFactor)
 end
 
 function Prices.updateCityPrices(city, goods, randomFactor)
+  city.prevPrices = {}
   for _, good in ipairs(goods) do
+    city.prevPrices[good.id] = city.prices[good.id] or Prices.calculate(good.basePrice, city:getStock(good.id), city.population, randomFactor)
     local stock = city:getStock(good.id)
     city.prices[good.id] = Prices.calculate(good.basePrice, stock, city.population, randomFactor)
   end
