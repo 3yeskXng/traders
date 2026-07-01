@@ -45,4 +45,18 @@ function ShipManager:serialize()
   return data
 end
 
+function ShipManager:deserialize(data)
+  if not data then return end
+  self.ships = {}
+  for _, entry in ipairs(data) do
+    local ship = Ship.new(entry.typeData or {}, entry.ownerId)
+    ship.id = entry.id
+    ship.name = entry.name or ship.name
+    ship.ownerId = entry.ownerId
+    ship.currentCityId = entry.currentCityId
+    ship.cargo = entry.cargo or {}
+    table.insert(self.ships, ship)
+  end
+end
+
 return ShipManager

@@ -1,16 +1,7 @@
 local Logger = require("core.logger")
-local EventBus = require("core.eventbus")
-local GoodsManager = require("simulation.goods.goodsmanager")
-local CityManager = require("simulation.cities.citymanager")
-local Population = require("simulation.cities.population")
-local Prices = require("simulation.economy.prices")
-local Production = require("simulation.economy.production")
-local Consumption = require("simulation.economy.consumption")
-local TradeSystem = require("simulation.trade.trading")
-local TravelSystem = require("simulation.travel.travel")
-local ShipManager = require("simulation.ships.shipmanager")
-local TimeSystem = require("simulation.time")
-local CityTax = require("simulation.taxes.citytax")
+local Bootstrap = require("simulation.world.bootstrap")
+local Serialize = require("simulation.world.serialize")
+local Update = require("simulation.world.update")
 local log = Logger.new("world")
 
 local World = {}
@@ -25,39 +16,24 @@ function World.new()
 end
 
 function World:init(data)
-  self.goods = GoodsManager.new()
-  self.cities = CityManager.new()
-  self.ships = ShipManager.new()
-  self.time = TimeSystem.new()
-  self.trade = TradeSystem.new()
-  self.travel = TravelSystem.new()
-  if data.goods then self.goods:load(data.goods) end
-  if data.cities then self.cities:load(data.cities) end
-  if data.ships then self.ships:loadTypes(data.ships) end
-  self:updateEconomy()
+  local world = Bootstrap.createWorld()
+  self.goods = world.goods
+  self.cities = world.cities
+  self.ships = world.ships
+  self.time = world.time
+  self.trade = world.trade
+  self.travel = world.travel
+  Bootstrap.initializeWorld(self, data)
   log:info("World initialized")
   return true
 end
 
 function World:update(dt)
-  local dayPassed = self.time:update(dt)
-  self.travel:update(dt, self.time:getSpeed())
-  if dayPassed then
-    self:updateEconomy()
-    for _, trader in ipairs(self.aiTraders) do
-      trader:update(self)
-    end
-  end
+  Update.tick(self, dt)
 end
 
 function World:updateEconomy()
-  for _, city in ipairs(self.cities:getAll()) do
-    Production.run(city, self.goods)
-    Consumption.run(city, self.goods)
-    Prices.updateCityPrices(city, self.goods:getAll(), math.random(-5, 5) * 0.01)
-    Population.update(city, self.goods)
-    CityTax.collect(city)
-  end
+  Bootstrap.updateEconomy(self)
 end
 
 function World:addPlayer(player)
@@ -69,12 +45,7 @@ function World:addAITrader(trader)
 end
 
 function World:serialize()
-  return {
-    cities = self.cities:serialize(),
-    ships = self.ships:serialize(),
-    time = self.time:serialize(),
-    travel = self.travel:serialize(),
-  }
+  return Serialize.snapshot(self)
 end
 
 return World

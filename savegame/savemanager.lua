@@ -24,8 +24,20 @@ end
 function SaveManager:load(world, slot)
   local data = Serializer.loadFromFile("save_" .. slot .. ".json")
   if not data then return false end
-  if data.world and data.world.time then world.time:deserialize(data.world.time) end
-  if data.world and data.world.travel then world.travel:deserialize(data.world.travel, world.cities) end
+  if data.world then
+    if data.world.time and world.time and world.time.deserialize then
+      world.time:deserialize(data.world.time)
+    end
+    if data.world.travel and world.travel and world.travel.deserialize then
+      world.travel:deserialize(data.world.travel, world.cities)
+    end
+    if data.world.cities and world.cities and world.cities.deserialize then
+      world.cities:deserialize(data.world.cities)
+    end
+    if data.world.ships and world.ships and world.ships.deserialize then
+      world.ships:deserialize(data.world.ships)
+    end
+  end
   if data.players then world.players = data.players end
   log:info("Loaded save from slot %d", slot)
   return true
