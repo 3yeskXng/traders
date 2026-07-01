@@ -9,6 +9,7 @@ function MainMenu.enter()
   MainMenu.buttons = {
     { text = Translator:t("menu.new_game"), event = "game:new" },
     { text = Translator:t("menu.load_game"), event = "game:load" },
+    { text = Translator:t("menu.language"), event = "state:change", data = "settings" },
     { text = Translator:t("menu.settings"), event = "state:change", data = "settings" },
     { text = Translator:t("menu.quit"), event = "quit" },
   }

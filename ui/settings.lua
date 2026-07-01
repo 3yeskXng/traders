@@ -7,11 +7,12 @@ local Settings = {}
 
 function Settings.enter()
   Settings.items = {
-    { label = Translator:t("settings.master_volume"), key = "masterVolume", type = "slider", min = 0, max = 100, value = Config.masterVolume or 80 },
-    { label = Translator:t("settings.music_volume"), key = "musicVolume", type = "slider", min = 0, max = 100, value = Config.musicVolume or 70 },
-    { label = Translator:t("settings.sfx_volume"), key = "sfxVolume", type = "slider", min = 0, max = 100, value = Config.sfxVolume or 80 },
-    { label = Translator:t("settings.show_fps"), key = "showFPS", type = "toggle", value = Config.showFPS or false },
-    { label = Translator:t("settings.fullscreen"), key = "fullscreen", type = "toggle", value = Config.fullscreen or false },
+    { labelKey = "settings.language", key = "language", type = "choice", options = { "de", "en" }, value = Config.language or "de" },
+    { labelKey = "settings.master_volume", key = "masterVolume", type = "slider", min = 0, max = 100, value = Config.masterVolume or 80 },
+    { labelKey = "settings.music_volume", key = "musicVolume", type = "slider", min = 0, max = 100, value = Config.musicVolume or 70 },
+    { labelKey = "settings.sfx_volume", key = "sfxVolume", type = "slider", min = 0, max = 100, value = Config.sfxVolume or 80 },
+    { labelKey = "settings.show_fps", key = "showFPS", type = "toggle", value = Config.showFPS or false },
+    { labelKey = "settings.fullscreen", key = "fullscreen", type = "toggle", value = Config.fullscreen or false },
   }
   Settings.selected = 1
 end
@@ -32,15 +33,18 @@ function Settings.draw()
   for i, item in ipairs(Settings.items) do
     local hover = i == Settings.selected
     love.graphics.setColor(hover and 0.8 or 0.6, hover and 0.7 or 0.5, hover and 0.3 or 0.2)
-    love.graphics.print(item.label, px, py)
+    love.graphics.print(Translator:t(item.labelKey), px, py)
     if item.type == "slider" then
       Components.drawSlider(px + 200, py, 150, item.value, item.min, item.max)
     elseif item.type == "toggle" then
-      love.graphics.printf(item.value and Translator:t("settings.yes") or Translator:t("settings.no"), px + 300, py, 50, "left")
+      love.graphics.printf(item.value and Translator:t("common.yes") or Translator:t("common.no"), px + 300, py, 50, "left")
+    elseif item.type == "choice" then
+      local choiceText = Translator:t("language." .. item.value)
+      love.graphics.printf(choiceText, px + 300, py, 100, "left")
     end
     py = py + 35
   end
-  Components.drawButton(Translator:t("menu.back") or "Zurück", w * 0.45, h * 0.7, 150, 35, false)
+  Components.drawButton(Translator:t("menu.back"), w * 0.45, h * 0.7, 150, 35, false)
 end
 
 function Settings.keypressed(key)
@@ -53,6 +57,16 @@ function Settings.keypressed(key)
       item.value = math.max(item.min, math.min(item.max, item.value + (key == "right" and 5 or -5)))
     elseif item.type == "toggle" then
       item.value = not item.value
+    elseif item.type == "choice" then
+      local index = 1
+      for i, option in ipairs(item.options) do
+        if option == item.value then index = i break end
+      end
+      index = index + (key == "right" and 1 or -1)
+      if index < 1 then index = #item.options end
+      if index > #item.options then index = 1 end
+      item.value = item.options[index]
+      EventBus:emit("language:change", item.value)
     end
   elseif key == "return" then EventBus:emit("state:change", "mainmenu") end
 end
@@ -61,6 +75,21 @@ function Settings.mousepressed(x, y, button)
   local w, h = love.graphics.getDimensions()
   if Components.isInRect(x, y, w * 0.45, h * 0.7, 150, 35) then
     EventBus:emit("state:change", "mainmenu")
+  end
+  local px, py = w * 0.35, h * 0.25
+  for i, item in ipairs(Settings.items) do
+    if item.type == "choice" then
+      local itemY = py + (i - 1) * 35
+      if Components.isInRect(x, y, px + 300, itemY, 100, 20) then
+        local index = 1
+        for j, option in ipairs(item.options) do
+          if option == item.value then index = j break end
+        end
+        index = index % #item.options + 1
+        item.value = item.options[index]
+        EventBus:emit("language:change", item.value)
+      end
+    end
   end
 end
 

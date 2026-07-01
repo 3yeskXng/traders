@@ -69,17 +69,17 @@ function MarketUI:draw(w, h)
     end
 
     love.graphics.setColor(0.8, 0.8, 0.8)
-    love.graphics.print(Components.formatNumber(price) .. " G", px + 110, ry)
+    love.graphics.print(Components.formatNumber(price) .. " " .. Translator:t("market.currency"), px + 110, ry)
 
     love.graphics.setColor(0.6, 0.6, 0.6)
-    local stockLabel = "L: " .. Components.formatNumber(stock)
+    local stockLabel = Translator:t("market.stock", Components.formatNumber(stock))
     if stock <= 0 then
       love.graphics.setColor(0.8, 0.3, 0.3)
     end
     love.graphics.print(stockLabel, px + 200, ry)
 
     love.graphics.setColor(0.6, 0.7, 0.6)
-    love.graphics.print("S: " .. Components.formatNumber(playerStock), px + 290, ry)
+    love.graphics.print(Translator:t("market.owned", Components.formatNumber(playerStock)), px + 290, ry)
 
     local bx = px + 370
     if stock > 0 and self.player and price > 0 and self.player.gold >= price then
@@ -112,7 +112,7 @@ function MarketUI:draw(w, h)
   if amountY + 30 < panelBottom then
     Components.drawPanel(px + 10, amountY, pw - 20, 25, nil)
     love.graphics.setColor(0.9, 0.9, 0.8)
-    love.graphics.print("Menge:", px + 15, amountY + 5)
+    love.graphics.print(Translator:t("market.amount"), px + 15, amountY + 5)
     for i, amt in ipairs(AMOUNT_CHOICES) do
       local ax = px + 80 + (i - 1) * 50
       local label = amt == 0 and Translator:t("market.max") or tostring(amt)

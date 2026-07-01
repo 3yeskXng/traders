@@ -109,7 +109,7 @@ function InGame:drawSidePanel(w, h, world)
   local y = 70
   love.graphics.setColor(1, 1, 1)
   local player = world.players[1]
-  love.graphics.print("Gold: " .. Utils.formatNumber(player.gold), x, y)
+  love.graphics.print(Translator:t("status.gold", Utils.formatNumber(player.gold)), x, y)
   y = y + 22
 
   if InGame.currentCity then
@@ -119,7 +119,7 @@ function InGame:drawSidePanel(w, h, world)
     y = y + 20
     love.graphics.print(Translator:t("status.wealth", Utils.formatNumber(InGame.currentCity.wealth)), x, y)
     y = y + 20
-    love.graphics.print(Translator:t("status.port", InGame.currentCity.hasPort and Translator:t("status.yes") or Translator:t("status.no")), x, y)
+    love.graphics.print(Translator:t("status.port", InGame.currentCity.hasPort and Translator:t("common.yes") or Translator:t("common.no")), x, y)
     y = y + 24
     love.graphics.setColor(0.8, 0.9, 1)
     love.graphics.print(Translator:t("status.production"), x, y)
@@ -142,20 +142,21 @@ function InGame:drawSidePanel(w, h, world)
   end
 
   love.graphics.setColor(0.6, 0.8, 0.6)
-  love.graphics.print("Flotte", x, y)
+  love.graphics.print(Translator:t("status.fleet"), x, y)
   y = y + 18
   love.graphics.setColor(1, 1, 1)
   local ships = world.ships:getShipsByOwner(player.id)
   if #ships == 0 then
-    love.graphics.print("Keine Schiffe", x, y)
+    love.graphics.print(Translator:t("status.no_ships"), x, y)
     y = y + 18
   else
     for _, ship in ipairs(ships) do
-      love.graphics.print(ship.name .. " (" .. (ship.currentCityId and (world.cities:getById(ship.currentCityId) and world.cities:getById(ship.currentCityId).name or "??") or "Unterwegs") .. ")", x, y)
+      local locationLabel = ship.currentCityId and (world.cities:getById(ship.currentCityId) and world.cities:getById(ship.currentCityId).name or Translator:t("status.unknown")) or Translator:t("status.traveling")
+      love.graphics.print(ship.name .. " (" .. locationLabel .. ")", x, y)
       y = y + 16
-      love.graphics.print("Cargo: " .. ship.cargoUsed .. "/" .. ship.cargoCapacity, x + 8, y)
+      love.graphics.print(Translator:t("status.cargo", ship.cargoUsed, ship.cargoCapacity), x + 8, y)
       y = y + 16
-      love.graphics.print("Speed: " .. ship.speed .. "   Zustand: " .. ship.condition .. "%", x + 8, y)
+      love.graphics.print(Translator:t("status.speed_condition", ship.speed, ship.condition), x + 8, y)
       y = y + 20
       if y > panelHeight - 40 then break end
     end
@@ -181,7 +182,7 @@ function InGame:drawBottomBar(w, h, world)
   if world.travel.traveling and InGame.currentCity then
     love.graphics.setColor(1, 0.8, 0.2)
     local progress = math.floor(world.travel.progress * 100)
-    love.graphics.printf("Reise nach " .. world.travel.to.name .. " (" .. progress .. "%)", 0, h - 27, w - 10, "right")
+    love.graphics.printf(Translator:t("status.traveling_to", world.travel.to.name, progress), 0, h - 27, w - 10, "right")
   elseif InGame.currentCity then
     love.graphics.setColor(0.5, 0.8, 0.5)
     love.graphics.printf(Translator:t("status.in_city", InGame.currentCity.name), 0, h - 27, w - 10, "right")
@@ -292,7 +293,7 @@ function InGame.mousereleased(x, y, button)
     if city then
       if InGame.currentCity and city.id ~= InGame.currentCity.id and not world.travel.traveling then
         EventBus:emit("travel:start", { from = InGame.currentCity, to = city })
-        InGame:notify("Reise gestartet: " .. InGame.currentCity.name .. " -> " .. city.name, { 0.5, 0.8, 1 })
+        InGame:notify(Translator:t("status.travel_started", InGame.currentCity.name, city.name), { 0.5, 0.8, 1 })
       elseif InGame.currentCity and city.id == InGame.currentCity.id then
         InGame.marketUI:open(city, world.players[1])
       else

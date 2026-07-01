@@ -120,7 +120,7 @@ function love.load()
     if player and world and data.city then
       player.currentCityId = data.city.id
       if InGame and InGame.notify then
-        InGame:notify("Angekommen in " .. data.city.name, { 0.4, 1, 0.4 })
+        InGame:notify(Translator:t("status.arrived", data.city.name), { 0.4, 1, 0.4 })
       end
       if InGame and InGame.mapRenderer then
         InGame.mapRenderer._centerOnArrival = true
