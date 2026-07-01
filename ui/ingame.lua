@@ -76,6 +76,7 @@ function InGame.draw()
   if not world then return end
   InGame.mapRenderer:draw(w, h, world)
   InGame:drawTopBar(w, h, world)
+  InGame:drawSidePanel(w, h, world)
   InGame:drawBottomBar(w, h, world)
   if InGame.marketUI and InGame.marketUI.visible then
     InGame.marketUI:draw(w, h)
@@ -94,6 +95,78 @@ function InGame:drawTopBar(w, h, world)
   love.graphics.setColor(0.8, 0.7, 0.2)
   if world.players[1] then
     love.graphics.printf("Gold: " .. Utils.formatNumber(world.players[1].gold), 0, 7, w - 10, "right")
+  end
+end
+
+function InGame:drawSidePanel(w, h, world)
+  local panelWidth = math.min(260, w * 0.2)
+  local panelHeight = h - 40 - 35
+  Components.drawPanel(10, 40, panelWidth, panelHeight, "Status")
+
+  local x = 20
+  local y = 70
+  love.graphics.setColor(1, 1, 1)
+  local player = world.players[1]
+  love.graphics.print("Gold: " .. Utils.formatNumber(player.gold), x, y)
+  y = y + 22
+
+  if InGame.currentCity then
+    love.graphics.print("Stadt: " .. InGame.currentCity.name, x, y)
+    y = y + 20
+    love.graphics.print("Bevölkerung: " .. Utils.formatNumber(InGame.currentCity.population), x, y)
+    y = y + 20
+    love.graphics.print("Wohlstand: " .. Utils.formatNumber(InGame.currentCity.wealth), x, y)
+    y = y + 20
+    love.graphics.print("Hafen: " .. (InGame.currentCity.hasPort and "Ja" or "Nein"), x, y)
+    y = y + 24
+    love.graphics.setColor(0.8, 0.9, 1)
+    love.graphics.print("Produktion", x, y)
+    y = y + 18
+    love.graphics.setColor(1, 1, 1)
+    for _, goodId in ipairs(InGame.currentCity.produces) do
+      love.graphics.print("• " .. goodId, x + 6, y)
+      y = y + 16
+    end
+    y = y + 6
+    love.graphics.setColor(0.9, 0.8, 0.7)
+    love.graphics.print("Nachfrage", x, y)
+    y = y + 18
+    love.graphics.setColor(1, 1, 1)
+    for _, goodId in ipairs(InGame.currentCity.consumes) do
+      love.graphics.print("• " .. goodId, x + 6, y)
+      y = y + 16
+    end
+    y = y + 8
+  end
+
+  love.graphics.setColor(0.6, 0.8, 0.6)
+  love.graphics.print("Flotte", x, y)
+  y = y + 18
+  love.graphics.setColor(1, 1, 1)
+  local ships = world.ships:getShipsByOwner(player.id)
+  if #ships == 0 then
+    love.graphics.print("Keine Schiffe", x, y)
+    y = y + 18
+  else
+    for _, ship in ipairs(ships) do
+      love.graphics.print(ship.name .. " (" .. (ship.currentCityId and (world.cities:getById(ship.currentCityId) and world.cities:getById(ship.currentCityId).name or "??") or "Unterwegs") .. ")", x, y)
+      y = y + 16
+      love.graphics.print("Cargo: " .. ship.cargoUsed .. "/" .. ship.cargoCapacity, x + 8, y)
+      y = y + 16
+      love.graphics.print("Speed: " .. ship.speed .. "   Zustand: " .. ship.condition .. "%", x + 8, y)
+      y = y + 20
+      if y > panelHeight - 40 then break end
+    end
+  end
+
+  if world.travel.traveling and world.travel.to then
+    love.graphics.setColor(0.8, 0.9, 1)
+    love.graphics.print("Unterwegs nach:", x, y)
+    y = y + 18
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.print(world.travel.to.name, x + 6, y)
+    y = y + 18
+    love.graphics.print("Fortschritt: " .. math.floor(world.travel.progress * 100) .. "%", x + 6, y)
   end
 end
 
