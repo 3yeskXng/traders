@@ -8,12 +8,14 @@ function Logger.new(name)
   return setmetatable({ name = name }, Logger)
 end
 
+local _unpack = table.unpack or unpack
+
 function Logger:log(level, message, ...)
   if LEVELS[level] < currentLevel then return end
   local info = debug.getinfo(2, "Sl")
   local loc = info and ("[" .. info.short_src .. ":" .. info.currentline .. "]") or ""
   local args = { ... }
-  if #args > 0 then message = string.format(message, table.unpack(args)) end
+  if #args > 0 then message = string.format(message, _unpack(args)) end
   print(string.format("[%s] %s %s: %s", level, loc, self.name, message))
 end
 

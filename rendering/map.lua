@@ -5,6 +5,7 @@ local MapBackgrounds = require("rendering.map.backgrounds")
 local MapLandmass = require("rendering.map.landmass")
 local MapRoutes = require("rendering.map.routes")
 local MapCities = require("rendering.map.cities")
+local MapTooltip = require("rendering.map.tooltip")
 local MapShips = require("rendering.map.ships")
 local MapOverlay = require("rendering.map.overlay")
 
@@ -53,7 +54,7 @@ function MapRenderer:draw(w, h, world)
   MapBackgrounds.drawWaterTint(w, h)
   MapLandmass.drawLandPolygons(self.mapConfig, w, h)
   MapLandmass.drawCoastlines(self.mapConfig, w, h)
-  MapLandmass.drawForests(self.mapConfig, w, h, self.time)
+  MapLandmass.drawForests(self.mapConfig, w, h)
   MapLandmass.drawRivers(self.mapConfig, w, h)
   MapLandmass.drawIslands(self.mapConfig, w, h)
   MapRoutes.drawRoutes(world, w, h)
@@ -64,7 +65,7 @@ function MapRenderer:draw(w, h, world)
   MapOverlay.drawOverlay(w, h, self.mapConfig)
   if self.hoveredCity then
     local mx, my = love.mouse.getPosition()
-    MapCities.drawCityTooltip(w, h, self.hoveredCity, self._world, mx, my)
+    MapTooltip.drawCityTooltip(w, h, self.hoveredCity, self._world, mx, my)
   end
 end
 

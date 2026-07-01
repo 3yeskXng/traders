@@ -1,14 +1,15 @@
 local EventBus = require("core.eventbus")
 local Components = require("ui.components")
+local Logger = require("core.logger")
+local Translator = require("core.translator")
 local MapRenderer = require("rendering.map")
 local MarketUI = require("ui.market")
 local MapConfig = require("simulation.map.config")
 local json = require("core.json")
-local Logger = require("core.logger")
-local Translator = require("core.translator")
 local TopBar = require("ui.ingame.topbar")
 local SidePanel = require("ui.ingame.sidepanel")
 local BottomBar = require("ui.ingame.bottombar")
+local Notifications = require("ui.ingame.notifications")
 
 local log = Logger.new("ingame")
 
@@ -58,19 +59,12 @@ function InGame.update(dt)
   if InGame.mapRenderer and InGame.world then
     InGame.mapRenderer:update(dt, InGame.world)
   end
-  if InGame.notifications then
-    for i = #InGame.notifications, 1, -1 do
-      InGame.notifications[i].ttl = InGame.notifications[i].ttl - dt
-      if InGame.notifications[i].ttl <= 0 then
-        table.remove(InGame.notifications, i)
-      end
-    end
-  end
+  Notifications.update(InGame.notifications, dt)
   InGame:updateCurrentCity(InGame.world)
 end
 
 function InGame:notify(text, color)
-  table.insert(InGame.notifications, { text = text, color = color or { 0.9, 0.9, 0.6 }, ttl = 4 })
+  Notifications.add(InGame.notifications, text, color)
   log:info(text)
 end
 
@@ -85,18 +79,7 @@ function InGame.draw()
   if InGame.marketUI and InGame.marketUI.visible then
     InGame.marketUI:draw(w, h)
   end
-  InGame:drawNotifications(w, h)
-end
-
-function InGame:drawNotifications(w, h)
-  if not InGame.notifications then return end
-  local ny = h * 0.15
-  for _, n in ipairs(InGame.notifications) do
-    local alpha = math.min(1, n.ttl)
-    love.graphics.setColor(n.color[1], n.color[2], n.color[3], alpha)
-    love.graphics.printf(n.text, w * 0.3, ny, w * 0.4, "center")
-    ny = ny + 22
-  end
+  Notifications.draw(InGame.notifications, w, h)
 end
 
 function InGame:updateCurrentCity(world)
