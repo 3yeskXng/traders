@@ -1,5 +1,6 @@
 local Logger = require("core.logger")
 local Components = require("ui.components")
+local Translator = require("core.translator")
 local Camera = require("rendering.camera")
 local CompassRose = require("rendering.compass")
 local MapConfig = require("simulation.map.config")
@@ -68,17 +69,26 @@ function MapRenderer:draw(w, h, world)
 end
 
 function MapRenderer:drawBackground(w, h)
-  love.graphics.setColor(0.88, 0.82, 0.72)
+  love.graphics.setColor(0.11, 0.2, 0.32)
   love.graphics.rectangle("fill", -w, -h, w * 3, h * 3)
-  local seed = 12345
-  local rng = love.math.newRandomGenerator(seed)
-  for i = 1, w * h * 0.002 do
-    local px = rng:random() * w * 3 - w
-    local py = rng:random() * h * 3 - h
-    local shade = 0.82 + rng:random() * 0.12
-    love.graphics.setColor(shade, shade * 0.95, shade * 0.85, 0.3)
-    love.graphics.rectangle("fill", px, py, 4 + rng:random() * 8, 2 + rng:random() * 4)
+
+  for i = 1, 12 do
+    local y = (i / 12) * h + math.sin(self.time * 0.7 + i) * 8
+    love.graphics.setColor(0.2, 0.34, 0.5, 0.16)
+    love.graphics.line(0, y, w, y + 8)
   end
+
+  for i = 1, 20 do
+    local x = (i / 20) * w + math.sin(self.time * 0.5 + i * 0.5) * 12
+    local y = h * 0.2 + (i % 4) * 18
+    love.graphics.setColor(0.25, 0.42, 0.62, 0.08)
+    love.graphics.circle("fill", x, y, 2 + (i % 3))
+  end
+
+  love.graphics.setColor(0.16, 0.3, 0.42, 0.22)
+  love.graphics.rectangle("fill", -w, h * 0.72, w * 3, h * 0.38)
+  love.graphics.setColor(0.24, 0.38, 0.5, 0.3)
+  love.graphics.rectangle("fill", -w, h * 0.78, w * 3, h * 0.08)
 end
 
 function MapRenderer:drawWaterTint(w, h)
@@ -301,14 +311,14 @@ function MapRenderer:drawCityLabel(w, h, world)
     if isHover then
       labelY = sy - 22
       love.graphics.setColor(0.9, 0.85, 0.4)
-      love.graphics.setNewFont(14)
+      love.graphics.setFont(love.graphics.newFont(14))
       label = city.name .. " (" .. Components.formatNumber(city.population) .. ")"
     elseif isPlayer then
       love.graphics.setColor(1, 0.9, 0.5)
-      love.graphics.setNewFont(12)
+      love.graphics.setFont(love.graphics.newFont(12))
     else
       love.graphics.setColor(0.95, 0.9, 0.7)
-      love.graphics.setNewFont(11)
+      love.graphics.setFont(love.graphics.newFont(11))
     end
 
     love.graphics.setColor(0, 0, 0, 0.5)
@@ -319,7 +329,7 @@ function MapRenderer:drawCityLabel(w, h, world)
     love.graphics.setColor(isHover and 1 or 0.95, (isHover or isPlayer) and 0.9 or 0.9, isPlayer and 0.5 or 0.7)
     love.graphics.print(label, sx + 11, labelY)
   end
-  love.graphics.setNewFont(12)
+  love.graphics.setFont(love.graphics.newFont(12))
 end
 
 function MapRenderer:drawPlayerShip(w, h, world)
@@ -370,9 +380,9 @@ function MapRenderer:drawOverlay(w, h)
     if dec.type == "text" then
       local dx, dy = dec.x * w, dec.y * h
       love.graphics.setColor(0.25, 0.18, 0.1, 0.6)
-      love.graphics.setNewFont(24)
+      love.graphics.setFont(love.graphics.newFont(24))
       love.graphics.printf(dec.text, dx - 100, dy - 15, 200, "center")
-      love.graphics.setNewFont(12)
+      love.graphics.setFont(love.graphics.newFont(12))
     end
   end
 end
@@ -391,12 +401,12 @@ function MapRenderer:drawCityTooltip(w, h, city)
   love.graphics.rectangle("line", tx, ty, tw, th)
 
   love.graphics.setColor(0.3, 0.2, 0.1)
-  love.graphics.setNewFont(13)
+  love.graphics.setFont(love.graphics.newFont(13))
   love.graphics.print(city.name, tx + 5, ty + 3)
-  love.graphics.setNewFont(11)
+  love.graphics.setFont(love.graphics.newFont(11))
   love.graphics.setColor(0.4, 0.3, 0.15)
-  love.graphics.print("BW: " .. Components.formatNumber(city.population), tx + 5, ty + 20)
-  love.graphics.print("Wohlstand: " .. Components.formatNumber(city.wealth), tx + 5, ty + 33)
+  love.graphics.print(Translator:t("tooltip.population", Components.formatNumber(city.population)), tx + 5, ty + 20)
+  love.graphics.print(Translator:t("tooltip.wealth", Components.formatNumber(city.wealth)), tx + 5, ty + 33)
 
   local produces = {}
   for _, pid in ipairs(city.produces) do
@@ -405,7 +415,7 @@ function MapRenderer:drawCityTooltip(w, h, city)
   end
   if #produces > 0 then
     love.graphics.setColor(0.3, 0.55, 0.2)
-    love.graphics.print("Produziert: " .. table.concat(produces, ", "), tx + 5, ty + 48)
+    love.graphics.print(Translator:t("tooltip.produces", table.concat(produces, ", ")), tx + 5, ty + 48)
   end
 
   local consumes = {}
@@ -415,9 +425,9 @@ function MapRenderer:drawCityTooltip(w, h, city)
   end
   if #consumes > 0 then
     love.graphics.setColor(0.7, 0.25, 0.2)
-    love.graphics.print("Benötigt: " .. table.concat(consumes, ", "), tx + 5, ty + 63)
+    love.graphics.print(Translator:t("tooltip.consumes", table.concat(consumes, ", ")), tx + 5, ty + 63)
   end
-  love.graphics.setNewFont(12)
+  love.graphics.setFont(love.graphics.newFont(12))
 end
 
 function MapRenderer:screenToWorld(sx, sy)

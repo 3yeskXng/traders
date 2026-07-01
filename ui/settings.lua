@@ -21,6 +21,7 @@ end
 function Settings.leave()
   for _, item in ipairs(Settings.items) do Config[item.key] = item.value end
   Config:save("data/settings.json")
+  EventBus:emit("settings:apply")
 end
 
 function Settings.update(dt) end
@@ -73,6 +74,9 @@ function Settings.keypressed(key)
         Components.setTheme(item.value)
       end
     end
+    if item.key == "fullscreen" or item.key == "showFPS" then
+      EventBus:emit("settings:apply")
+    end
   elseif key == "return" then EventBus:emit("state:change", "mainmenu") end
 end
 
@@ -80,12 +84,19 @@ function Settings.mousepressed(x, y, button)
   local w, h = love.graphics.getDimensions()
   if Components.isInRect(x, y, w * 0.45, h * 0.7, 150, 35) then
     EventBus:emit("state:change", "mainmenu")
+    return
   end
   local px, py = w * 0.35, h * 0.25
   for i, item in ipairs(Settings.items) do
-    if item.type == "choice" then
-      local itemY = py + (i - 1) * 35
-      if Components.isInRect(x, y, px + 300, itemY, 100, 20) then
+    local itemY = py + (i - 1) * 35
+    local rowRect = { x = px, y = itemY, w = 280, h = 20 }
+    if Components.isInRect(x, y, rowRect.x, rowRect.y, rowRect.w, rowRect.h) then
+      if item.type == "toggle" then
+        item.value = not item.value
+        if item.key == "fullscreen" or item.key == "showFPS" then
+          EventBus:emit("settings:apply")
+        end
+      elseif item.type == "choice" then
         local index = 1
         for j, option in ipairs(item.options) do
           if option == item.value then index = j break end
@@ -97,7 +108,11 @@ function Settings.mousepressed(x, y, button)
         elseif item.key == "uiStyle" then
           Components.setTheme(item.value)
         end
+      elseif item.type == "slider" then
+        item.value = math.max(item.min, math.min(item.max, item.value + 5))
       end
+      Settings.selected = i
+      return
     end
   end
 end

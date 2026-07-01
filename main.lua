@@ -21,6 +21,34 @@ local player
 local saveManager
 local pluginManager
 
+local function setGlobalFont(langCode)
+  local lang = langCode or Config.language or "de"
+  local fontSize = 14
+  local font
+  if lang == "zh" then
+    local ok, result = pcall(love.graphics.newFont, "/usr/share/fonts/google-noto-sans-cjk-vf-fonts/NotoSansCJK-VF.ttc", fontSize)
+    if ok and result then
+      font = result
+    end
+  end
+  if not font then
+    font = love.graphics.newFont(fontSize)
+  end
+  love.graphics.setFont(font)
+  return font
+end
+
+local function applyGraphicsSettings()
+  local fullscreen = Config.fullscreen or false
+  if love.window and love.window.setFullscreen then
+    love.window.setFullscreen(fullscreen, "desktop")
+  end
+  if love.window and love.window.setMode and love.graphics.getDimensions then
+    local w, h = love.graphics.getDimensions()
+    love.window.setMode(w, h, { fullscreen = fullscreen, resizable = true, vsync = true })
+  end
+end
+
 local function readJSON(path)
   local file = love.filesystem.newFile(path, "r")
   if not file then log:warn("Could not open %s", path) return nil end
@@ -38,10 +66,12 @@ function love.load()
   Config:load("data/settings.json")
   Config.language = Config.language or "de"
   Config.uiStyle = Config.uiStyle or "retro"
+  setGlobalFont(Config.language)
   Translator:loadLanguage("en", "data/lang/en.json")
   Translator:loadLanguage("de", "data/lang/de.json")
   Translator:loadLanguage("zh", "data/lang/zh.json")
   Translator:setLanguage(Config.language)
+  applyGraphicsSettings()
   local Components = require("ui.components")
   Components.setTheme(Config.uiStyle)
   pluginManager = PluginManager.new()
@@ -56,8 +86,13 @@ function love.load()
   EventBus:on("language:change", function(code)
     if Translator:setLanguage(code) then
       Config.language = code
+      setGlobalFont(code)
       Config:save("data/settings.json")
     end
+  end)
+  EventBus:on("settings:apply", function()
+    Config:save("data/settings.json")
+    applyGraphicsSettings()
   end)
   EventBus:on("game:new", function()
     world = World.new()
@@ -143,6 +178,10 @@ end
 
 function love.draw()
   stateMachine:draw()
+  if Config.showFPS then
+    love.graphics.setColor(1, 1, 1, 0.85)
+    love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), 10, 10)
+  end
 end
 
 function love.keypressed(key, scancode, isrepeat)
