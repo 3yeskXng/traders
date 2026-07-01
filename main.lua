@@ -3,6 +3,7 @@ local json = require("core.json")
 local EventBus = require("core.eventbus")
 local Config = require("core.config")
 local Translator = require("core.translator")
+local Fonts = require("core.fonts")
 local PluginManager = require("core.pluginmanager")
 local StateMachine = require("core.statemachine")
 local ModLoader = require("core.modloader")
@@ -22,20 +23,7 @@ local saveManager
 local pluginManager
 
 local function setGlobalFont(langCode)
-  local lang = langCode or Config.language or "de"
-  local fontSize = 14
-  local font
-  if lang == "zh" then
-    local ok, result = pcall(love.graphics.newFont, "/usr/share/fonts/google-noto-sans-cjk-vf-fonts/NotoSansCJK-VF.ttc", fontSize)
-    if ok and result then
-      font = result
-    end
-  end
-  if not font then
-    font = love.graphics.newFont(fontSize)
-  end
-  love.graphics.setFont(font)
-  return font
+  return Fonts.setGlobalFont(langCode or Config.language or "de")
 end
 
 local function applyGraphicsSettings()

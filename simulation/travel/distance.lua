@@ -1,7 +1,7 @@
 local Distance = {}
 
-local DAYS_PER_UNIT = 8
-local BASE_DAYS = 2
+local DAYS_PER_UNIT = 16
+local BASE_DAYS = 6
 
 function Distance.between(cityA, cityB)
   local dx = cityA.x - cityB.x
