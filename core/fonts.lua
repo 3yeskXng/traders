@@ -7,6 +7,18 @@ function Fonts.setGlobalFont(langCode, size)
   local function tryLoad(path)
     local ok, result = pcall(love.graphics.newFont, path, fontSize)
     if ok and result then return result end
+    if path:sub(1, 1) == "/" then
+      local ok2, fh = pcall(io.open, path, "rb")
+      if ok2 and fh then
+        local data = fh:read("*all")
+        fh:close()
+        if data then
+          local fileData = love.filesystem.newFileData(data, path:match("[^/]+$"))
+          local ok3, result3 = pcall(love.graphics.newFont, fileData, fontSize)
+          if ok3 and result3 then return result3 end
+        end
+      end
+    end
     return nil
   end
 
@@ -15,14 +27,15 @@ function Fonts.setGlobalFont(langCode, size)
       "assets/fonts/NotoSansCJK-VF.ttc",
       "assets/fonts/NotoSansSC-Regular.otf",
       "assets/fonts/wqy-microhei.ttc",
+      "/usr/share/fonts/google-noto-sans-cjk-vf-fonts/NotoSansCJK-VF.ttc",
+      "/usr/share/fonts/google-droid-sans-fonts/DroidSansFallbackFull.ttf",
+      "/usr/share/fonts/truetype/wqy/wqy-microhei.ttc",
+      "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
       "C:/Windows/Fonts/msyh.ttc",
       "C:/Windows/Fonts/msyhbd.ttc",
       "C:/Windows/Fonts/simhei.ttf",
       "C:/Windows/Fonts/simsun.ttc",
       "C:/Windows/Fonts/meiryo.ttc",
-      "/usr/share/fonts/truetype/wqy/wqy-microhei.ttc",
-      "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
-      "/usr/share/fonts/google-noto-sans-cjk-vf-fonts/NotoSansCJK-VF.ttc",
       "/System/Library/Fonts/PingFang.ttc",
       "/System/Library/Fonts/STHeiti Light.ttc",
     }
