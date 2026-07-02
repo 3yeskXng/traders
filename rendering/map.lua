@@ -9,7 +9,7 @@ local MapRenderer = {}
 MapRenderer.__index = MapRenderer
 
 function MapRenderer.new()
-  return State.new()
+  return setmetatable(State.new(), { __index = MapRenderer })
 end
 
 function MapRenderer:update(dt, world)
