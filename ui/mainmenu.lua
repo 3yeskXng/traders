@@ -1,6 +1,7 @@
 local EventBus = require("core.eventbus")
 local Components = require("ui.components")
 local Translator = require("core.translator")
+local Fonts = require("core.fonts")
 local MenuBackground = require("ui.mainmenu.background")
 
 local MainMenu = {}
@@ -34,9 +35,9 @@ function MainMenu.draw()
   MenuBackground.draw(MainMenu.elapsed, w, h)
   love.graphics.setColor(Components.currentTheme.text)
   local fontSize = math.min(56, w / 16)
-  love.graphics.setFont(love.graphics.newFont(fontSize))
+  love.graphics.setFont(Fonts.getFont(fontSize))
   love.graphics.printf(Translator:t("game.title"), 0, h * 0.16, w, "center")
-  love.graphics.setFont(love.graphics.newFont(18))
+  love.graphics.setFont(Fonts.getFont(18))
   love.graphics.setColor(Components.currentTheme.textSecondary)
   love.graphics.printf(Translator:t("game.subtitle"), 0, h * 0.16 + fontSize + 10, w, "center")
 
@@ -57,7 +58,7 @@ function MainMenu.draw()
   end
 
   love.graphics.setColor(Components.currentTheme.textSecondary)
-  love.graphics.setFont(love.graphics.newFont(14))
+  love.graphics.setFont(Fonts.getFont(14))
   love.graphics.printf(Translator:t("app.version", MainMenu.version), 20, h - 28, w, "left")
 end
 

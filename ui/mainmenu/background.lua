@@ -41,7 +41,7 @@ function MenuBackground.draw(elapsed, w, h)
   end
 
   love.graphics.setColor(theme.textSecondary)
-  love.graphics.setFont(love.graphics.newFont(34))
+  love.graphics.setFont(require("core.fonts").getFont(34))
   love.graphics.printf(Translator:t("menu.map_label"), w * 0.05, h * 0.18, w * 0.4, "left")
 end
 

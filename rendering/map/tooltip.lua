@@ -17,9 +17,9 @@ function MapTooltip.drawCityTooltip(w, h, city, world, mx, my)
   love.graphics.rectangle("line", tx, ty, tw, th)
 
   love.graphics.setColor(0.3, 0.2, 0.1)
-  love.graphics.setFont(love.graphics.newFont(13))
+  love.graphics.setFont(require("core.fonts").getFont(13))
   love.graphics.print(city.name, tx + 5, ty + 3)
-  love.graphics.setFont(love.graphics.newFont(11))
+  love.graphics.setFont(require("core.fonts").getFont(11))
 
   love.graphics.setColor(0.4, 0.3, 0.15)
   love.graphics.print(Translator:t("tooltip.population", Components.formatNumber(city.population)), tx + 5, ty + 20)
@@ -45,7 +45,7 @@ function MapTooltip.drawCityTooltip(w, h, city, world, mx, my)
     love.graphics.print(Translator:t("tooltip.consumes", table.concat(consumes, ", ")), tx + 5, ty + 63)
   end
 
-  love.graphics.setFont(love.graphics.newFont(12))
+  love.graphics.setFont(require("core.fonts").getFont(12))
 end
 
 return MapTooltip

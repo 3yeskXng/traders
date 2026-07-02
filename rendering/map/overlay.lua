@@ -26,9 +26,9 @@ function MapOverlay.drawOverlay(w, h, mapConfig)
     if dec.type == "text" then
       local dx, dy = dec.x * w, dec.y * h
       love.graphics.setColor(0.25, 0.18, 0.1, 0.6)
-      love.graphics.setFont(love.graphics.newFont(24))
+      love.graphics.setFont(require("core.fonts").getFont(24))
       love.graphics.printf(dec.text, dx - 100, dy - 15, 200, "center")
-      love.graphics.setFont(love.graphics.newFont(12))
+      love.graphics.setFont(require("core.fonts").getFont(12))
     end
   end
 end

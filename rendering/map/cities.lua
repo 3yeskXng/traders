@@ -68,14 +68,14 @@ function MapCities.drawCityLabel(w, h, world, mapRenderer)
     if isHover then
       labelY = sy - 22
       love.graphics.setColor(0.9, 0.85, 0.4)
-      love.graphics.setFont(love.graphics.newFont(14))
+      love.graphics.setFont(require("core.fonts").getFont(14))
       label = city.name .. " (" .. Components.formatNumber(city.population) .. ")"
     elseif isPlayer then
       love.graphics.setColor(1, 0.9, 0.5)
-      love.graphics.setFont(love.graphics.newFont(12))
+      love.graphics.setFont(require("core.fonts").getFont(12))
     else
       love.graphics.setColor(0.95, 0.9, 0.7)
-      love.graphics.setFont(love.graphics.newFont(11))
+      love.graphics.setFont(require("core.fonts").getFont(11))
     end
 
     love.graphics.setColor(0, 0, 0, 0.5)
@@ -88,7 +88,7 @@ function MapCities.drawCityLabel(w, h, world, mapRenderer)
     love.graphics.print(label, sx + 11, labelY)
   end
 
-  love.graphics.setFont(love.graphics.newFont(12))
+  love.graphics.setFont(require("core.fonts").getFont(12))
 end
 
 return MapCities

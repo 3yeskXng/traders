@@ -1,5 +1,16 @@
 local Fonts = {}
 
+local loadedFontData
+
+function Fonts.getFont(size)
+  size = size or 14
+  if loadedFontData then
+    local ok, font = pcall(love.graphics.newFont, loadedFontData, size)
+    if ok and font then return font end
+  end
+  return love.graphics.newFont(size)
+end
+
 function Fonts.setGlobalFont(langCode, size)
   local fontSize = size or 14
   local font
@@ -13,9 +24,10 @@ function Fonts.setGlobalFont(langCode, size)
         local data = fh:read("*all")
         fh:close()
         if data then
-          local fileData = love.filesystem.newFileData(data, path:match("[^/]+$"))
-          local ok3, result3 = pcall(love.graphics.newFont, fileData, fontSize)
+          loadedFontData = love.filesystem.newFileData(data, path:match("[^/]+$"))
+          local ok3, result3 = pcall(love.graphics.newFont, loadedFontData, fontSize)
           if ok3 and result3 then return result3 end
+          loadedFontData = nil
         end
       end
     end
