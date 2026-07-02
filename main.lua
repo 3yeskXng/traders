@@ -11,7 +11,7 @@ local Settings = require("ui.settings")
 local NewGame = require("ui.newgame")
 local InGame = require("ui.ingame")
 local SaveManager = require("savegame.savemanager")
-local Events = require("core.events")
+local Events = require("ui.events")
 
 local log = Logger.new("main")
 local stateMachine = StateMachine.new()

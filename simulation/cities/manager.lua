@@ -1,5 +1,5 @@
 local Logger = require("core.logger")
-local City = require("simulation.cities.city")
+local City = require("simulation.cities.data")
 local log = Logger.new("citymanager")
 
 local CityManager = {}

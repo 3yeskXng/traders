@@ -1,5 +1,5 @@
 local Logger = require("core.logger")
-local Goods = require("simulation.goods.goods")
+local Goods = require("simulation.goods.data")
 local log = Logger.new("goodsmanager")
 
 local GoodsManager = {}

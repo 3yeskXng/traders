@@ -1,5 +1,5 @@
 local Logger = require("core.logger")
-local Ship = require("simulation.ships.ship")
+local Ship = require("simulation.ships.data")
 local log = Logger.new("shipmanager")
 
 local ShipManager = {}

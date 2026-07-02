@@ -4,4 +4,5 @@ return {
   InGame = require("ui.ingame"),
   Market = require("ui.market"),
   Settings = require("ui.settings"),
+  Events = require("ui.events"),
 }

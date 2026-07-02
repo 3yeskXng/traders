@@ -1,5 +1,5 @@
 return {
-  City = require("simulation.cities.city"),
-  CityManager = require("simulation.cities.citymanager"),
+  City = require("simulation.cities.data"),
+  CityManager = require("simulation.cities.manager"),
   Population = require("simulation.cities.population"),
 }
