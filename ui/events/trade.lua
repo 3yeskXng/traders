@@ -6,10 +6,11 @@ local Trade = {}
 
 function Trade.register(worldRef)
   EventBus:on("trade:buy", function(data)
-    if worldRef.world and worldRef.world.trade and data.city and data.goodId then
-      local price = data.city.prices[data.goodId] or 0
+    if worldRef.world and worldRef.world.trade and worldRef.world.goods and data.city and data.goodId then
+      local good = worldRef.world.goods:getById(data.goodId)
+      if not good then return end
       local amount = worldRef.world.trade:buy(
-        worldRef.player, data.city, data.goodId, data.amount or 1, price
+        worldRef.player, data.city, data.goodId, data.amount or 1, good
       )
       if amount > 0 then
         log:info("Bought %d x %s", amount, data.goodId)
@@ -18,10 +19,11 @@ function Trade.register(worldRef)
   end)
 
   EventBus:on("trade:sell", function(data)
-    if worldRef.world and worldRef.world.trade and data.city and data.goodId then
-      local price = data.city.prices[data.goodId] or 0
+    if worldRef.world and worldRef.world.trade and worldRef.world.goods and data.city and data.goodId then
+      local good = worldRef.world.goods:getById(data.goodId)
+      if not good then return end
       local amount = worldRef.world.trade:sell(
-        worldRef.player, data.city, data.goodId, data.amount or 1, price
+        worldRef.player, data.city, data.goodId, data.amount or 1, good
       )
       if amount > 0 then
         log:info("Sold %d x %s", amount, data.goodId)
